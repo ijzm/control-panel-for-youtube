@@ -4222,8 +4222,11 @@ async function observeDesktopRichGridItems(options) {
           $lastGhostGridClone.append($lastGhostGridClone.lastElementChild.cloneNode(true))
         }
       }
-      ghostGridClones.set($continuationRenderer, $lastGhostGridClone)
-      $continuationRenderer.insertAdjacentElement('afterend', $lastGhostGridClone)
+      // YouTube can remove the continuation renderer before we move ghost cards
+      if ($continuationRenderer.isConnected) {
+        $continuationRenderer.insertAdjacentElement('afterend', $lastGhostGridClone)
+        ghostGridClones.set($continuationRenderer, $lastGhostGridClone)
+      }
     } else {
       warn('fixGhostCards: no ghost cards found in continuation renderer')
     }
@@ -4232,12 +4235,13 @@ async function observeDesktopRichGridItems(options) {
       observeElement($spinner, (_, observer) => {
         if (!$spinner.hasAttribute('active')) return
         observer.disconnect()
+        if (!$continuationRenderer.isConnected) return
         $lastSpinnerClone = document.createElement('div')
         $lastSpinnerClone.className = 'cpfyt-grid-spinner'
         log('fixGhostCards: moving active loading spinner')
         $lastSpinnerClone.append($spinner.cloneNode(true))
-        spinnerClones.set($continuationRenderer, $lastSpinnerClone)
         $gridContents.append($lastSpinnerClone)
+        spinnerClones.set($continuationRenderer, $lastSpinnerClone)
       }, {
         leading: true,
         logObserve: debugLogGridObservers,
