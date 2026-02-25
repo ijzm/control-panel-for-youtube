@@ -17,14 +17,35 @@
   "alwaysUseTheaterMode": {
     "message": "Toujours utiliser le mode cinéma"
   },
+  "animateHiding": {
+    "message": "Masquer avec une animation"
+  },
   "annoyances": {
     "message": "Nuisances"
   },
   "anyPercent": {
     "message": "Quel que soit le pourcentage"
   },
+  "atLeastX": {
+    "message": "Au moins $AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
   "auto": {
     "message": "Automatique"
+  },
+  "autoPlusX": {
+    "message": "Auto +$AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
   },
   "blockAds": {
     "message": "Bloquer les publicités"
@@ -32,11 +53,32 @@
   "blockAdsNote": {
     "message": "Désactiver pour éviter les conflits avec d'autres bloqueurs de publicités"
   },
+  "blur": {
+    "message": "Flou"
+  },
   "dark": {
     "message": "Sombre"
   },
+  "debug": {
+    "message": "Mode débogage"
+  },
+  "debugLogGridObservers": {
+    "message": "Logs des observateurs de grille"
+  },
+  "debugManualHiding": {
+    "message": "Déboguer le masquage manuel"
+  },
+  "debugManualHidingNote": {
+    "message": "Met en évidence les éléments au lieu de les masquer"
+  },
+  "debugNote": {
+    "message": "Active les logs de débogage"
+  },
+  "debugOptions": {
+    "message": "Options de débogage"
+  },
   "default": {
-    "message": "Ne pas forcer"
+    "message": "Par défaut"
   },
   "desktopOnly": {
     "message": "Bureau uniquement"
@@ -68,6 +110,12 @@
   "disableVideoPreviews": {
     "message": "Désactiver les aperçus vidéo"
   },
+  "displayHomeGridAsList": {
+    "message": "Afficher la grille de l'accueil en liste"
+  },
+  "displaySubscriptionsGridAsList": {
+    "message": "Afficher la grille des abonnements en liste"
+  },
   "downloadTranscript": {
     "message": "Rendre la transcription téléchargeable"
   },
@@ -96,11 +144,17 @@
   "features": {
     "message": "Fonctionnalités"
   },
+  "fixGhostCards": {
+    "message": "Corriger les espaces réservés de chargement"
+  },
   "fullSizeTheaterMode": {
     "message": "Mode cinéma grand écran"
   },
   "fullSizeTheaterModeHideHeader": {
     "message": "Masquer l'en-tête"
+  },
+  "gridItemsPerRow": {
+    "message": "Éléments de grille par ligne"
   },
   "hiddenChannelsSummary": {
     "message": "Chaîne(s) masquée(s) ($COUNT$)",
@@ -118,7 +172,10 @@
     "message": "Masquer le bouton « Demander »"
   },
   "hideAutoDubbed": {
-    "message": "Masquer les vidéos doublées automatiquement dans les recommandations"
+    "message": "Masquer les vidéos doublées automatiquement"
+  },
+  "hideAutoDubbedNote": {
+    "message": "Uniquement lorsqu'elles sont explicitement étiquetées"
   },
   "hideChannelBanner": {
     "message": "Masquer la bannière de la chaîne"
@@ -156,6 +213,9 @@
   "hideEndVideos": {
     "message": "Masquer le contenu des écrans de fin"
   },
+  "hideExperiencingInterruptions": {
+    "message": "Masquer le popup \"La lecture de votre vidéo se bloque ?\""
+  },
   "hideExploreButton": {
     "message": "Masquer le bouton « Explorer » sur la page d'accueil"
   },
@@ -179,6 +239,9 @@
   },
   "hideLive": {
     "message": "Masquer les vidéos en direct"
+  },
+  "hideLowViews": {
+    "message": "Masquer les vidéos peu vues dans les recommandations"
   },
   "hideMembersOnly": {
     "message": "Masquer les vidéos réservées aux membres"
@@ -279,9 +342,6 @@
   "medium": {
     "message": "Moyen"
   },
-  "minimumGridItemsPerRow": {
-    "message": "Nombre minimum d'éléments par ligne de la grille"
-  },
   "minimumShortsPerRow": {
     "message": "Nombre minimum de Shorts par rangée"
   },
@@ -297,8 +357,8 @@
   "pauseChannelTrailers": {
     "message": "Mettre en pause automatiquement les bandes-annonces de chaîne"
   },
-  "playerCompactPlayButton": {
-    "message": "Toujours utiliser le bouton Lecture compact"
+  "playerControlsBg": {
+    "message": "Arrière-plan des contrôles du lecteur"
   },
   "playerFixFullScreenButton": {
     "message": "Restaurer le clic dans le coin pour basculer le mode plein écran"
@@ -314,9 +374,6 @@
   },
   "playerHideFullScreenVoting": {
     "message": "Masquer les boutons J'aime/Je n'aime pas en plein écran"
-  },
-  "playerRemoveControlsBg": {
-    "message": "Supprimer l'arrière-plan des contrôles"
   },
   "playerRemoveDelhiExperimentFlags": {
     "message": "Désactiver les nouveaux contrôles et barre de progression"
@@ -336,6 +393,9 @@
   "qualityMedium": {
     "message": "Moyenne"
   },
+  "recentChanges": {
+    "message": "Changements récents sur YouTube"
+  },
   "redirectLogoToSubscriptions": {
     "message": "Rediriger le logo YouTube vers les Abonnements"
   },
@@ -352,7 +412,7 @@
     "message": "Restaurer le lien Abonnements dans la barre latérale"
   },
   "revertGiantRelated": {
-    "message": "Restaurer les petites miniatures dans les recommandations"
+    "message": "Restaurer la disposition de la barre latérale des recommandations"
   },
   "revertSidebarOrder": {
     "message": "Restaurer l'ordre des éléments de la barre latérale"
@@ -362,6 +422,9 @@
   },
   "shorts": {
     "message": "Shorts"
+  },
+  "showChannelHeadersInListView": {
+    "message": "Afficher les en-têtes de chaîne en vue liste"
   },
   "showFullVideoTitles": {
     "message": "Afficher les titres complets des vidéos"
@@ -381,6 +444,9 @@
   "tidyGuideSidebar": {
     "message": "Nettoyer la barre latérale du guide"
   },
+  "transparent": {
+    "message": "Transparent"
+  },
   "uiTweaks": {
     "message": "Amélioration de l'interface utilisateur"
   },
@@ -393,7 +459,7 @@
   "videoPages": {
     "message": "Pages de vidéo"
   },
-  "youtubeExperiments": {
-    "message": "Expérimentations YouTube"
+  "xsmall": {
+    "message": "Très petit"
   }
 }

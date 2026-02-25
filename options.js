@@ -2,6 +2,7 @@ document.title = chrome.i18n.getMessage('extensionName')
 
 for (let optionValue of [
   'auto',
+  'blur',
   'dark',
   'default',
   'device',
@@ -9,10 +10,30 @@ for (let optionValue of [
   'light',
   'medium',
   'small',
+  'transparent',
+  'xsmall',
 ]) {
   let label = chrome.i18n.getMessage(optionValue)
   for (let $option of document.querySelectorAll(`option[value="${optionValue}"]`)) {
     $option.textContent = label
+  }
+}
+
+for (let gridItemsRelative of [1, 2, 3]) {
+  let $option = document.querySelector(`select[name="minimumGridItemsPerRow"] option[value="+${gridItemsRelative}"]`)
+  if ($option) {
+    $option.textContent = chrome.i18n.getMessage('autoPlusX', [gridItemsRelative])
+  } else {
+    console.warn('could not find <option> for gridItemsRelative', gridItemsRelative)
+  }
+}
+
+for (let gridItemsMinimum of [3, 4, 5, 6]) {
+  let $option = document.querySelector(`select[name="minimumGridItemsPerRow"] option[value="${gridItemsMinimum}"]`)
+  if ($option) {
+    $option.textContent = chrome.i18n.getMessage('atLeastX', [gridItemsMinimum])
+  } else {
+    console.warn('could not find <option> for gridItemsMinimum', gridItemsMinimum)
   }
 }
 
@@ -23,10 +44,17 @@ for (let translationId of [
   'alwaysShowShortsProgressBar',
   'alwaysUseOriginalAudio',
   'alwaysUseTheaterMode',
+  'animateHiding',
   'annoyances',
   'anyPercent',
   'blockAds',
   'blockAdsNote',
+  'debug',
+  'debugLogGridObservers',
+  'debugManualHiding',
+  'debugManualHidingNote',
+  'debugNote',
+  'debugOptions',
   'defaultPlaybackSpeed',
   'disableAmbientMode',
   'disableAutoplay',
@@ -36,15 +64,20 @@ for (let translationId of [
   'disableThemedHover',
   'disableThemedHoverNote',
   'disableVideoPreviews',
+  'displayHomeGridAsList',
+  'displaySubscriptionsGridAsList',
   'downloadTranscript',
   'embeddedVideos',
   'enabled',
   'enforceTheme',
+  'fixGhostCards',
   'fullSizeTheaterMode',
   'fullSizeTheaterModeHideHeader',
+  'gridItemsPerRow',
   'hideAI',
   'hideAskButton',
   'hideAutoDubbed',
+  'hideAutoDubbedNote',
   'hideChannelBanner',
   'hideChannelWatermark',
   'hideChannels',
@@ -57,6 +90,7 @@ for (let translationId of [
   'hideEmbedShareButton',
   'hideEndCards',
   'hideEndVideos',
+  'hideExperiencingInterruptions',
   'hideExploreButton',
   'hideHiddenVideos',
   'hideHiddenVideosNote',
@@ -65,6 +99,7 @@ for (let translationId of [
   'hideInfoPanels',
   'hideJumpAheadButton',
   'hideLive',
+  'hideLowViews',
   'hideMembersOnly',
   'hideMerchEtc',
   'hideMetadata',
@@ -94,24 +129,22 @@ for (let translationId of [
   'hideVoiceSearch',
   'hideWatched',
   'hideWatchedThreshold',
-  'inHomeAndSubscriptionsNote',
-  'minimumGridItemsPerRow',
   'mobileGridView',
   'newVideoPlayerUI',
   'pauseChannelTrailers',
-  'playerCompactPlayButton',
+  'playerControlsBg',
   'playerFixFullScreenButton',
   'playerHideFullScreenControls',
   'playerHideFullScreenMoreVideos',
   'playerHideFullScreenTitle',
   'playerHideFullScreenVoting',
-  'playerRemoveControlsBg',
   'playerRemoveDelhiExperimentFlags',
   'playerRemoveDelhiExperimentFlagsNote',
   'qualityFull',
   'qualityHigh',
   'qualityLow',
   'qualityMedium',
+  'recentChanges',
   'redirectLogoToSubscriptions',
   'redirectShorts',
   'removePink',
@@ -121,6 +154,7 @@ for (let translationId of [
   'revertSidebarOrder',
   'searchThumbnailSize',
   'shorts',
+  'showChannelHeadersInListView',
   'showFullVideoTitles',
   'snapshotFormat',
   'snapshotQuality',
@@ -130,9 +164,22 @@ for (let translationId of [
   'useSquareCorners',
   'videoLists',
   'videoPages',
-  'youtubeExperiments',
 ]) {
-  document.getElementById(translationId).textContent = chrome.i18n.getMessage(translationId)
+  let $el = document.getElementById(translationId)
+  if ($el) {
+    $el.textContent = chrome.i18n.getMessage(translationId)
+  } else {
+    console.warn('could not find element for translationId', translationId)
+  }
+}
+
+for (let translationClass of [
+  'inHomeAndSubscriptionsNote',
+]) {
+  let translation = chrome.i18n.getMessage(translationClass)
+  for (let $el of document.querySelectorAll(`.${translationClass}`)) {
+    $el.textContent = translation
+  }
 }
 
 let $body = document.body
@@ -147,13 +194,14 @@ if (isSafari) {
 }
 
 //#region Default config
+let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 /** @type {import("./types").OptionsConfig} */
 let defaultConfig = {
   enabled: true,
   collapsedOptions: [],
   // Default based on platform until the content script runs
   version: /(Android|iP(ad|hone))/.test(navigator.userAgent) ? 'mobile' : 'desktop',
-  alwaysShowShortsProgressBar: false,
+  alwaysShowShortsProgressBar: true,
   blockAds: true,
   defaultPlaybackSpeed: "1.0",
   disableAmbientMode: true,
@@ -165,90 +213,96 @@ let defaultConfig = {
   hideAskButton: false,
   hideAutoDubbed: false,
   hideChannelBanner: false,
-  hideChannelWatermark: false,
+  hideChannelWatermark: true,
   hideChannels: true,
   hideComments: false,
   hideHiddenVideos: true,
   hideHomeCategories: false,
-  hideInfoPanels: false,
+  hideInfoPanels: true,
   hideLive: false,
-  hideMembersOnly: false,
-  hideMetadata: false,
-  hideMixes: false,
+  hideLowViews: true,
+  hideMembersOnly: true,
+  hideMetadata: true,
+  hideMixes: true,
   hideMoviesAndTV: false,
   hideNextButton: true,
   hidePlaylists: false,
-  hidePremiumUpsells: false,
-  hideRelated: false,
+  hidePremiumUpsells: true,
+  hideRelated: true,
   hideShareThanksClip: false,
   hideShorts: true,
-  hideShortsMusicLink: false,
-  hideShortsRelatedLink: false,
+  hideShortsMusicLink: true,
+  hideShortsRelatedLink: true,
   hideShortsSuggestedActions: true,
   hideSponsored: true,
-  hideStreamed: false,
+  hideStreamed: true,
   hideSuggestedSections: true,
-  hideUpcoming: false,
-  hideVoiceSearch: false,
+  hideUpcoming: true,
+  hideVoiceSearch: true,
   hideWatched: true,
-  hideWatchedThreshold: '80',
+  hideWatchedThreshold: '85',
   playerHideFullScreenControls: false,
-  playerHideFullScreenMoreVideos: false,
+  playerHideFullScreenMoreVideos: true,
   redirectShorts: true,
-  removePink: false,
+  removePink: true,
   showFullVideoTitles: false,
   stopShortsLooping: true,
   useSquareCorners: false,
   // Desktop only
   addTakeSnapshot: true,
-  alwaysUseOriginalAudio: false,
+  alwaysUseOriginalAudio: true,
   alwaysUseTheaterMode: false,
-  disableThemedHover: false,
+  animateHiding: !prefersReducedMotion,
+  disableThemedHover: true,
   disableVideoPreviews: false,
+  displayHomeGridAsList: false,
+  displaySubscriptionsGridAsList: false,
   downloadTranscript: true,
   enforceTheme: 'default',
+  fixGhostCards: true,
   fullSizeTheaterMode: false,
   fullSizeTheaterModeHideHeader: true,
   hideChat: false,
   hideChatFullScreen: false,
-  hideCollaborations: false,
-  hideEndCards: false,
+  hideCollaborations: true,
+  hideEndCards: true,
   hideEndVideos: true,
+  hideExperiencingInterruptions: false,
   hideJumpAheadButton: false,
-  hideMerchEtc: false,
-  hideRelatedBelow: false,
-  hideSidebarSubscriptions: true,
+  hideMerchEtc: true,
+  hideRelatedBelow: true,
+  hideSidebarSubscriptions: false,
   hideShortsMetadataUntilHover: true,
   hideShortsRemixButton: true,
-  hideSubscriptionsLatestBar: false,
-  minimumGridItemsPerRow: 'auto',
-  minimumShortsPerRow: 'auto',
+  hideSubscriptionsLatestBar: true,
+  minimumGridItemsPerRow: '+1',
+  minimumShortsPerRow: '8',
   pauseChannelTrailers: true,
-  playerCompactPlayButton: true,
+  playerControlsBg: 'default',
   playerFixFullScreenButton: true,
-  playerHideFullScreenTitle: false,
-  playerHideFullScreenVoting: false,
-  playerRemoveControlsBg: false,
+  playerHideFullScreenTitle: true,
+  playerHideFullScreenVoting: true,
   playerRemoveDelhiExperimentFlags: false,
   redirectLogoToSubscriptions: false,
-  restoreMiniplayerButton: false,
+  restoreMiniplayerButton: true,
   restoreSidebarSubscriptionsLink: true,
   revertGiantRelated: true,
   revertSidebarOrder: true,
-  searchThumbnailSize: 'medium',
+  searchThumbnailSize: 'xsmall',
   snapshotFormat: 'jpeg',
   snapshotQuality: '0.92',
-  tidyGuideSidebar: false,
+  showChannelHeadersInListView: true,
+  tidyGuideSidebar: true,
   // Mobile only
   allowBackgroundPlay: true,
   hideExploreButton: true,
-  hideHomePosts: false,
+  hideHomePosts: true,
   hideOpenApp: true,
-  hideSubscriptionsChannelList: false,
+  hideSubscriptionsChannelList: true,
   mobileGridView: true,
   // Embedded videos
   hideEmbedPauseOverlay: true,
-  hideEmbedShareButton: false,
+  hideEmbedShareButton: true,
 }
 //#endregion
 
@@ -355,10 +409,13 @@ function shouldDisplayHiddenChannels() {
 }
 
 function updateDisplay() {
+  $body.classList.toggle('debugging', optionsConfig.debug)
   $body.classList.toggle('desktop', optionsConfig.version == 'desktop')
   $body.classList.toggle('disabled', !optionsConfig.enabled)
+  $body.classList.toggle('displayingGridAsList',  optionsConfig.displayHomeGridAsList || optionsConfig.displaySubscriptionsGridAsList)
   $body.classList.toggle('fullSizeTheaterMode', optionsConfig.fullSizeTheaterMode)
   $body.classList.toggle('hiddenChannels', shouldDisplayHiddenChannels())
+  $body.classList.toggle('hidingHiddenVideos', optionsConfig.hideHiddenVideos)
   $body.classList.toggle('hidingWatched', optionsConfig.hideWatched)
   $body.classList.toggle('jpegSnapshot', optionsConfig.snapshotFormat == 'jpeg')
   $body.classList.toggle('mobile', optionsConfig.version == 'mobile')

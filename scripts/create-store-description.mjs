@@ -82,18 +82,20 @@ ${messages.ads}:
 • ${messages.hideSponsored}
 • ${messages.hideMerchEtc}${messages.desktopVersion}
 
-${messages.youtubeExperiments}:
+${messages.recentChanges}:
+
 • ${messages.restoreSidebarSubscriptionsLink}${messages.desktopVersion}
 • ${messages.revertSidebarOrder}${messages.desktopVersion}
 • ${messages.revertGiantRelated}${messages.desktopVersion}
+• ${messages.displaySubscriptionsGridAsList}${messages.desktopVersion}
+• ${messages.displayHomeGridAsList}${messages.desktopVersion}
 
 ${messages.newVideoPlayerUI}:
 
 • ${messages.playerRemoveDelhiExperimentFlags}${messages.desktopVersion} - ${messages.playerRemoveDelhiExperimentFlagsNote}
 • ${messages.playerHideFullScreenControls}
 • ${messages.playerHideFullScreenMoreVideos}
-• ${messages.playerCompactPlayButton}${messages.desktopVersion}
-• ${messages.playerRemoveControlsBg}${messages.desktopVersion}
+• ${messages.playerControlsBg}${messages.desktopVersion} - ${messages.blur} / ${messages.transparent}
 • ${messages.restoreMiniplayerButton}${messages.desktopVersion}
 • ${messages.playerFixFullScreenButton}${messages.desktopVersion}
 • ${messages.playerHideFullScreenTitle}${messages.desktopVersion}
@@ -105,6 +107,7 @@ ${messages.annoyances}:
 • ${messages.removePink}
 • ${messages.hideInfoPanels}
 • ${messages.hidePremiumUpsells}
+• ${messages.hideExperiencingInterruptions}${messages.desktopVersion}
 • ${messages.disableVideoPreviews}${messages.desktopVersion}
 • ${messages.disableThemedHover}${messages.desktopVersion}
 • ${messages.pauseChannelTrailers}${messages.desktopVersion}
@@ -122,7 +125,8 @@ ${messages.videoLists}:
 • ${messages.hideUpcoming}
 • ${messages.hideMembersOnly}
 • ${messages.hideCollaborations}
-• ${messages.hideAutoDubbed}
+• ${messages.hideLowViews}
+• ${messages.hideAutoDubbed} - ${messages.hideAutoDubbedNote}
 • ${messages.hideWatched}
 • ${messages.hideHiddenVideos} - ${messages.hideHiddenVideosNote}
 • ${messages.hideChannels} - ${messages.hideChannelsNote}
@@ -176,6 +180,7 @@ ${messages.uiTweaks}:
 • ${messages.redirectLogoToSubscriptions}${messages.desktopVersion}
 • ${messages.tidyGuideSidebar}${messages.desktopVersion}
 • ${messages.hideSubscriptionsLatestBar}${messages.desktopVersion}
+• ${messages.fixGhostCards}${messages.desktopVersion}
 • ${messages.mobileGridView}${messages.mobileVersion}
 • ${messages.hideExploreButton}${messages.mobileVersion}
 • ${messages.hideSubscriptionsChannelList}${messages.mobileVersion}
@@ -190,7 +195,7 @@ if (process.argv[3] == 'md') {
   storeDescription = storeDescription
     // Section titles
     .replace(/^([^:\n]+):$/gm, '**$1:**')
-    // List tiems
+    // List items
     // .replace(/•/g, '-')
 }
 

@@ -17,14 +17,35 @@
   "alwaysUseTheaterMode": {
     "message": "Always use theater mode"
   },
+  "animateHiding": {
+    "message": "Animate hiding"
+  },
   "annoyances": {
     "message": "Annoyances"
   },
   "anyPercent": {
     "message": "any %"
   },
+  "atLeastX": {
+    "message": "At least $AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
   "auto": {
     "message": "Auto"
+  },
+  "autoPlusX": {
+    "message": "Auto +$AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
   },
   "blockAds": {
     "message": "Block ads"
@@ -32,11 +53,32 @@
   "blockAdsNote": {
     "message": "Disable to avoid conflicts with other adblockers"
   },
+  "blur": {
+    "message": "Blur"
+  },
   "dark": {
     "message": "Dark"
   },
+  "debug": {
+    "message": "Debug mode"
+  },
+  "debugLogGridObservers": {
+    "message": "Log grid observers"
+  },
+  "debugManualHiding": {
+    "message": "Debug manual hiding"
+  },
+  "debugManualHidingNote": {
+    "message": "Highlights elements instead of hiding them"
+  },
+  "debugNote": {
+    "message": "Enables debug logging"
+  },
+  "debugOptions": {
+    "message": "Debug options"
+  },
   "default": {
-    "message": "Don't enforce"
+    "message": "Default"
   },
   "desktopOnly": {
     "message": "Desktop only"
@@ -71,6 +113,12 @@
   "disableVideoPreviews": {
     "message": "Disable video previews"
   },
+  "displayHomeGridAsList": {
+    "message": "Display Home grid as a list"
+  },
+  "displaySubscriptionsGridAsList": {
+    "message": "Display Subscriptions grid as a list"
+  },
   "downloadTranscript": {
     "message": "Make Transcript downloadable"
   },
@@ -99,11 +147,17 @@
   "features": {
     "message": "Features"
   },
+  "fixGhostCards": {
+    "message": "Fix grid loading placeholders"
+  },
   "fullSizeTheaterMode": {
     "message": "Full size theater mode"
   },
   "fullSizeTheaterModeHideHeader": {
     "message": "Hide header"
+  },
+  "gridItemsPerRow": {
+    "message": "Grid items per row"
   },
   "hiddenChannelsSummary": {
     "message": "Hidden channels ($COUNT$)",
@@ -121,7 +175,10 @@
     "message": "Hide Ask button"
   },
   "hideAutoDubbed": {
-    "message": "Hide Auto-dubbed videos in Related"
+    "message": "Hide Auto-dubbed videos"
+  },
+  "hideAutoDubbedNote": {
+    "message": "Where explicitly labeled"
   },
   "hideChannelBanner": {
     "message": "Hide channel banner images"
@@ -159,6 +216,9 @@
   "hideEndVideos": {
     "message": "Hide video endscreen content"
   },
+  "hideExperiencingInterruptions": {
+    "message": "Hide \"Experiencing interruptions?\" popup"
+  },
   "hideExploreButton": {
     "message": "Hide Explore button in Home"
   },
@@ -182,6 +242,9 @@
   },
   "hideLive": {
     "message": "Hide Live videos"
+  },
+  "hideLowViews": {
+    "message": "Hide low view videos in Related"
   },
   "hideMembersOnly": {
     "message": "Hide Members only videos"
@@ -282,9 +345,6 @@
   "medium": {
     "message": "Medium"
   },
-  "minimumGridItemsPerRow": {
-    "message": "Minimum grid items per row"
-  },
   "minimumShortsPerRow": {
     "message": "Minimum Shorts per row"
   },
@@ -300,8 +360,8 @@
   "pauseChannelTrailers": {
     "message": "Automatically pause channel trailers"
   },
-  "playerCompactPlayButton": {
-    "message": "Always use compact Play button"
+  "playerControlsBg": {
+    "message": "Player controls background"
   },
   "playerFixFullScreenButton": {
     "message": "Restore corner click to toggle full screen"
@@ -317,9 +377,6 @@
   },
   "playerHideFullScreenVoting": {
     "message": "Hide full screen like/dislike buttons"
-  },
-  "playerRemoveControlsBg": {
-    "message": "Remove background from controls"
   },
   "playerRemoveDelhiExperimentFlags": {
     "message": "Disable new progress bar and controls"
@@ -339,6 +396,9 @@
   "qualityMedium": {
     "message": "Medium"
   },
+  "recentChanges": {
+    "message": "Recent YouTube changes"
+  },
   "redirectLogoToSubscriptions": {
     "message": "Link YouTube logo to Subscriptions"
   },
@@ -355,7 +415,7 @@
     "message": "Restore Subscriptions link in sidebar"
   },
   "revertGiantRelated": {
-    "message": "Restore small thumbnails in Related"
+    "message": "Restore Related sidebar layout"
   },
   "revertSidebarOrder": {
     "message": "Restore order of sidebar items"
@@ -365,6 +425,9 @@
   },
   "shorts": {
     "message": "Shorts"
+  },
+  "showChannelHeadersInListView": {
+    "message": "Show channel headers in list view"
   },
   "showFullVideoTitles": {
     "message": "Show full video titles"
@@ -384,6 +447,9 @@
   "tidyGuideSidebar": {
     "message": "Tidy Guide sidebar"
   },
+  "transparent": {
+    "message": "Transparent"
+  },
   "uiTweaks": {
     "message": "UI tweaks"
   },
@@ -396,7 +462,7 @@
   "videoPages": {
     "message": "Video pages"
   },
-  "youtubeExperiments": {
-    "message": "YouTube experiments"
+  "xsmall": {
+    "message": "Extra small"
   }
 }

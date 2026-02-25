@@ -1,13 +1,16 @@
 void function() {
 
 //#region Default config
+let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 /** @type {import("./types").SiteConfig} */
 let defaultConfig = {
   enabled: true,
   debug: false,
+  debugLogGridObservers: false,
   debugManualHiding: false,
   defaultPlaybackSpeed: "1.0",
   alwaysShowShortsProgressBar: false,
+  alwaysShowShortsProgressBar: true,
   blockAds: true,
   disableAmbientMode: true,
   disableAutoplay: true,
@@ -18,91 +21,98 @@ let defaultConfig = {
   hideAskButton: false,
   hideAutoDubbed: false,
   hideChannelBanner: false,
-  hideChannelWatermark: false,
+  hideChannelWatermark: true,
   hideChannels: true,
   hideComments: false,
   hideHiddenVideos: true,
   hideHomeCategories: false,
-  hideInfoPanels: false,
+  hideInfoPanels: true,
   hideLive: false,
-  hideMembersOnly: false,
-  hideMetadata: false,
-  hideMixes: false,
+  hideLowViews: true,
+  hideMembersOnly: true,
+  hideMetadata: true,
+  hideMixes: true,
   hideMoviesAndTV: false,
   hideNextButton: true,
   hidePlaylists: false,
-  hidePremiumUpsells: false,
-  hideRelated: false,
+  hidePremiumUpsells: true,
+  hideRelated: true,
   hideShareThanksClip: false,
   hideShorts: true,
-  hideShortsMusicLink: false,
-  hideShortsRelatedLink: false,
+  hideShortsMusicLink: true,
+  hideShortsRelatedLink: true,
   hideShortsSuggestedActions: true,
   hideSponsored: true,
-  hideStreamed: false,
+  hideStreamed: true,
   hideSuggestedSections: true,
-  hideUpcoming: false,
-  hideVoiceSearch: false,
+  hideUpcoming: true,
+  hideVoiceSearch: true,
   hideWatched: true,
-  hideWatchedThreshold: '80',
+  hideWatchedThreshold: '85',
   playerHideFullScreenControls: false,
-  playerHideFullScreenMoreVideos: false,
+  playerHideFullScreenMoreVideos: true,
   redirectShorts: true,
-  removePink: false,
+  removePink: true,
   showFullVideoTitles: false,
   stopShortsLooping: true,
   useSquareCorners: false,
   // Desktop only
   addTakeSnapshot: true,
-  alwaysUseOriginalAudio: false,
+  alwaysUseOriginalAudio: true,
   alwaysUseTheaterMode: false,
-  disableThemedHover: false,
+  animateHiding: !prefersReducedMotion,
+  disableThemedHover: true,
   disableVideoPreviews: false,
+  displayHomeGridAsList: false,
+  displaySubscriptionsGridAsList: false,
   downloadTranscript: true,
   enforceTheme: 'default',
+  fixGhostCards: true,
   fullSizeTheaterMode: false,
   fullSizeTheaterModeHideHeader: true,
   hideChat: false,
   hideChatFullScreen: false,
-  hideCollaborations: false,
-  hideEndCards: false,
+  hideCollaborations: true,
+  hideEndCards: true,
   hideEndVideos: true,
+  hideExperiencingInterruptions: false,
   hideJumpAheadButton: false,
-  hideMerchEtc: false,
-  hideRelatedBelow: false,
-  hideSidebarSubscriptions: true,
+  hideMerchEtc: true,
+  hideRelatedBelow: true,
+  hideSidebarSubscriptions: false,
   hideShortsMetadataUntilHover: true,
   hideShortsRemixButton: true,
-  hideSubscriptionsLatestBar: false,
-  minimumGridItemsPerRow: 'auto',
-  minimumShortsPerRow: 'auto',
+  hideSubscriptionsLatestBar: true,
+  minimumGridItemsPerRow: '+1',
+  minimumShortsPerRow: '8',
   pauseChannelTrailers: true,
-  playerCompactPlayButton: true,
+  playerControlsBg: 'default',
   playerFixFullScreenButton: true,
-  playerHideFullScreenTitle: false,
-  playerHideFullScreenVoting: false,
-  playerRemoveControlsBg: false,
+  playerHideFullScreenTitle: true,
+  playerHideFullScreenVoting: true,
   playerRemoveDelhiExperimentFlags: false,
   redirectLogoToSubscriptions: false,
-  restoreMiniplayerButton: false,
+  restoreMiniplayerButton: true,
   restoreSidebarSubscriptionsLink: true,
   revertGiantRelated: true,
   revertSidebarOrder: true,
-  searchThumbnailSize: 'medium',
+  searchThumbnailSize: 'xsmall',
   snapshotFormat: 'jpeg',
   snapshotQuality: '0.92',
-  tidyGuideSidebar: false,
+  showChannelHeadersInListView: true,
+  tidyGuideSidebar: true,
   // Mobile only
   allowBackgroundPlay: true,
   hideExploreButton: true,
-  hideHomePosts: false,
+  hideHomePosts: true,
   hideOpenApp: true,
-  hideSubscriptionsChannelList: false,
+  hideSubscriptionsChannelList: true,
   mobileGridView: true,
 }
 //#endregion
 
 let debug = false
+let debugLogGridObservers = false
 let debugManualHiding = false
 
 let mobile = location.hostname == 'm.youtube.com'
@@ -134,65 +144,124 @@ let config
  */
 const locales = {
   'af-ZA': {
+    ADS_BLOCKED: 'Pre-roll advertensies suksesvol geblokkeer!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+kyke$',
+    MINIPLAYER: 'Minispeler',
     ORIGINAL: 'oorspronklike',
     SHORTS: "Kortvideo's",
+    UPLOAD_DATE: 'Oplaaidatum',
   },
   'am-ET': {
+    ADS_BLOCKED: 'ከቪዲዮ በፊት ያሉ ማስታወቂያዎች በተሳካ ሁኔታ ታግደዋል!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ዕይታዎች$',
+    MINIPLAYER: 'ትንሽ አጫዋች',
     ORIGINAL: 'የመጀመሪያ',
     SHORTS: 'ቁምጣ',
+    UPLOAD_DATE: 'የተለቀቀበት ቀን',
   },
   ar: {
+    ADS_BLOCKED: 'تم حظر إعلانات ما قبل الفيديو بنجاح!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+مشاهدات$',
+    MINIPLAYER: 'المشغّل المصغّر',
     ORIGINAL: 'أصلي',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'تاريخ التحميل',
   },
   'as-IN': {
+    ADS_BLOCKED: "ভিডিঅ'ৰ আগৰ বিজ্ঞাপনসমূহ সফলতাৰে অৱৰোধ কৰা হৈছে!",
+    LOW_VIEWS_RE: '^(\\d{1,3})টা\\s+ভিউ$',
+    MINIPLAYER: 'মিনিপ্লে’য়াৰ',
     ORIGINAL: 'মূল',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'আপলোডৰ তাৰিখ',
   },
   'az-Latn-AZ': {
+    ADS_BLOCKED: 'Video öncəsi reklamlar uğurla bloklandı!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+baxış$',
+    MINIPLAYER: 'Minipleyer',
     ORIGINAL: 'orijinal',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Yüklənmə tarixi',
   },
   'be-BY': {
+    ADS_BLOCKED: 'Рэклама перад відэа паспяхова заблакіравана!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+праглядаў$',
+    MINIPLAYER: 'Міні-прайгравальнік',
     ORIGINAL: 'арыгінальны',
     SHORTS: 'Кароткія відэа',
+    UPLOAD_DATE: 'Дата загрузкі',
   },
   'bg-BG': {
+    ADS_BLOCKED: 'Рекламите преди видеото са блокирани успешно!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+показвания$',
+    MINIPLAYER: 'Миниплейър',
     ORIGINAL: 'оригинален',
     SHORTS: 'Кратки видеоклипове',
+    UPLOAD_DATE: 'Дата на качване',
   },
   'bn-BD': {
+    ADS_BLOCKED: 'ভিডিওর শুরুর বিজ্ঞাপন সফলভাবে ব্লক করা হয়েছে!',
+    LOW_VIEWS_RE: '^(\\d{1,3})টি\\s+ভিউ$',
+    MINIPLAYER: 'মিনিপ্লেয়ার',
     ORIGINAL: 'মূল',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'আপলোডের তারিখ',
   },
   'bs-Latn-BA': {
+    ADS_BLOCKED: 'Reklame prije videa su uspješno blokirane!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+pregleda$',
+    MINIPLAYER: 'Miniplejer',
     ORIGINAL: 'original',
-    SHORTS: 'Shorts',
+    SHORTS: 'Shortsi',
+    UPLOAD_DATE: 'Datum otpremanja',
   },
   'ca-ES': {
+    ADS_BLOCKED: 'Anuncis pre-roll bloquejats amb èxit!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visualitzacions$',
+    MINIPLAYER: 'Minireproductor',
     ORIGINAL: 'original',
     SHORTS: 'Curts',
+    UPLOAD_DATE: 'Data de pujada',
   },
   'cs-CZ': {
+    ADS_BLOCKED: 'Reklamy před videem byly úspěšně zablokovány!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+zhlédnutí$',
+    MINIPLAYER: 'Minipřehrávač',
     ORIGINAL: 'původní',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Datum nahrání',
   },
   'da-DK': {
+    ADS_BLOCKED: 'Pre-roll reklamer blokeret!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visninger$',
+    MINIPLAYER: 'Miniafspiller',
     ORIGINAL: 'originalt',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Uploaddato',
   },
   'de-DE': {
+    ADS_BLOCKED: 'Pre-Roll-Anzeigen erfolgreich blockiert!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+Aufrufe$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'Original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Uploaddatum',
   },
   'el-GR': {
+    ADS_BLOCKED: 'Οι διαφημίσεις στην αρχή του βίντεο αποκλείστηκαν!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+προβολές$',
+    MINIPLAYER: 'Ελαχιστοποιημένο player',
     ORIGINAL: 'πρωτότυπο',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Ημερομηνία μεταφόρτωσης',
   },
   en: {
+    ADS_BLOCKED: 'Pre-roll ads successfully blocked!',
     CLIP: 'Clip',
     COLLABORATORS: 'Collaborators',
     HIDE_CHANNEL: 'Hide channel',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+views$',
+    MINIPLAYER: 'Miniplayer',
     MIXES: 'Mixes',
     ORIGINAL: 'original',
     SHARE: 'Share',
@@ -203,42 +272,78 @@ const locales = {
     TELL_US_WHY: 'Tell us why',
     THANKS: 'Thanks',
     UNHIDE_CHANNEL: 'Unhide channel',
+    UPLOAD_DATE: 'Upload date',
   },
   'es-419': {
+    ADS_BLOCKED: '¡Anuncios pre-roll bloqueados con éxito!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+vistas$',
+    MINIPLAYER: 'Reproductor en miniatura',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Fecha de carga',
   },
   'es-ES': {
+    ADS_BLOCKED: '¡Anuncios pre-roll bloqueados con éxito!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visualizaciones$',
+    MINIPLAYER: 'Minirreproductor',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Fecha de subida',
   },
   'es-US': {
+    ADS_BLOCKED: '¡Anuncios pre-roll bloqueados con éxito!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+vistas$',
+    MINIPLAYER: 'Reproductor en miniatura',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Fecha de carga',
   },
   'et-EE': {
+    ADS_BLOCKED: 'Videolaadsed reklaamid edukalt blokeeritud!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+vaatamist$',
+    MINIPLAYER: 'Minipleier',
     ORIGINAL: 'algne',
     SHORTS: 'Lühivideod',
+    UPLOAD_DATE: 'Üleslaadimise kuupäev',
   },
   'eu-ES': {
+    ADS_BLOCKED: 'Bideo aurreko iragarkiak ondo blokeatu dira!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ikustaldi$',
+    MINIPLAYER: 'Erreproduzigailu txikia',
     ORIGINAL: 'jatorrizkoa',
     SHORTS: 'Film laburrak',
+    UPLOAD_DATE: 'Igotzeko data',
   },
   'fa-IR': {
+    ADS_BLOCKED: 'تبلیغات ابتدای ویدیو با موفقیت مسدود شد!',
+    LOW_VIEWS_RE: '^\\u200f(\\d{1,3})\\s+بازدید$',
+    MINIPLAYER: 'پخش‌کننده کوچک',
     ORIGINAL: 'اصلی',
     SHORTS: 'کوته‌ویدیوهای YouTube',
+    UPLOAD_DATE: 'تاریخ بارگذاری',
   },
   'fil-PH': {
+    ADS_BLOCKED: 'Matagumpay na na-block ang mga pre-roll ad!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+panonood$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'orihinal',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Petsa ng pag-upload',
   },
   'fr-CA': {
+    ADS_BLOCKED: 'Publicités avant la vidéo bloquées avec succès !',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visionnements$',
+    MINIPLAYER: 'Minilecteur',
     ORIGINAL: 'originale',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Date de mise en ligne',
   },
   'fr-FR': {
+    ADS_BLOCKED: 'Publicités avant la vidéo bloquées avec succès !',
     COLLABORATORS: 'Collaborateurs',
     HIDE_CHANNEL: 'Masquer la chaîne',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+vues$',
+    MINIPLAYER: 'Lecteur réduit',
     MIXES: 'Mix',
     ORIGINAL: 'original',
     SHARE: 'Partager',
@@ -249,51 +354,95 @@ const locales = {
     TELL_US_WHY: 'Dites-nous pourquoi',
     THANKS: 'Merci',
     UNHIDE_CHANNEL: 'Afficher la chaîne',
+    UPLOAD_DATE: 'Date de mise en ligne',
   },
   'gl-ES': {
+    ADS_BLOCKED: 'Anuncios pre-roll bloqueados con éxito!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+reproducións$',
+    MINIPLAYER: 'Reprodutor minimizado',
     ORIGINAL: 'orixinal',
     SHORTS: 'Curtas',
+    UPLOAD_DATE: 'Data de subida',
   },
   'gu-IN': {
+    ADS_BLOCKED: 'વીડિયો પહેલાની જાહેરાતો સફળતાપૂર્વક બ્લોક કરી!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+જોવાયાની\\s+સંખ્યા$',
+    MINIPLAYER: 'મીનીપ્લેયર',
     ORIGINAL: 'ઑરિજિનલ',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'અપલોડ કર્યાની તારીખ',
   },
   'he-IL': {
+    ADS_BLOCKED: 'פרסומות לפני הסרטון נחסמו בהצלחה!',
+    LOW_VIEWS_RE: '^\\u202b(\\d{1,3})\\u202c\\s+צפיות$',
+    MINIPLAYER: 'מיני-נגן',
     ORIGINAL: 'מקור',
     SHORTS: 'סרטוני Shorts',
+    UPLOAD_DATE: 'תאריך העלאה',
   },
   'hi-IN': {
+    ADS_BLOCKED: 'वीडियो से पहले आने वाले विज्ञापन सफलतापूर्वक ब्लॉक किए गए!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+व्यू$',
+    MINIPLAYER: 'मिनी प्लेयर',
     ORIGINAL: 'मूल',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'अपलोड करने की तारीख',
   },
   'hr-HR': {
+    ADS_BLOCKED: 'Oglasi prije videa uspješno blokirani!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+pregleda$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'izvorno',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Datum prijenosa',
   },
   'hu-HU': {
+    ADS_BLOCKED: 'Videó előtti hirdetések sikeresen blokkolva!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+megtekintés$',
+    MINIPLAYER: 'Minilejátszó',
     ORIGINAL: 'eredeti',
     SHORTS: 'Rövid videók',
+    UPLOAD_DATE: 'Feltöltés dátuma',
   },
   'hy-AM': {
+    ADS_BLOCKED: 'Տեսանյութից առաջ գովազդները հաջողությամբ արգելափակվեցին:',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+դիտում$',
+    MINIPLAYER: 'Մինի նվագարկիչ',
     ORIGINAL: 'բնօրինակ',
     SHORTS: 'Կարճ հոլովակներ',
+    UPLOAD_DATE: 'Բեռնելու ամսաթիվ',
   },
   'id-ID': {
+    ADS_BLOCKED: 'Iklan pre-roll berhasil diblokir!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+x\\s+ditonton$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'asli',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Tanggal upload',
   },
   'is-IS': {
+    ADS_BLOCKED: 'Forauglýsingar lokaðar!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+áhorf$',
+    MINIPLAYER: 'Smáspilari',
     ORIGINAL: 'upprunalegt',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Hleðsludagsetning',
   },
   'it-IT': {
+    ADS_BLOCKED: 'Annunci pre-roll bloccati con successo!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visualizzazioni$',
+    MINIPLAYER: 'Mini player',
     ORIGINAL: 'originale',
     SHORTS: 'Short',
+    UPLOAD_DATE: 'Data di caricamento',
   },
   'ja-JP': {
+    ADS_BLOCKED: '動画再生前の広告をブロックしました！',
     CLIP: 'クリップ',
     COLLABORATORS: 'コラボレーター',
     HIDE_CHANNEL: 'チャンネルを隠す',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+回視聴$',
+    MINIPLAYER: 'ミニプレーヤー',
     MIXES: 'ミックス',
     ORIGINAL: 'オリジナル',
     SHARE: '共有',
@@ -303,171 +452,336 @@ const locales = {
     TAKE_SNAPSHOT: 'スナップショットを撮る',
     TELL_US_WHY: '理由を教えてください',
     UNHIDE_CHANNEL: 'チャンネルの再表示',
+    UPLOAD_DATE: 'アップロード日',
   },
   'ka-GE': {
+    ADS_BLOCKED: 'რეკლამები ვიდეომდე წარმატებით დაიბლოკა!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ნახვა$',
+    MINIPLAYER: 'მინიდამკვრელი',
     ORIGINAL: 'ორიგინალია',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'ატვირთვის თარიღი',
   },
   'kk-KZ': {
+    ADS_BLOCKED: 'Бейне алдындағы жарнамалар сәтті бұғатталды!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+рет\\s+көрілді$',
+    MINIPLAYER: 'Шағын ойнатқыш',
     ORIGINAL: 'түпнұсқа',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Жүктелген күні',
   },
   'km-KH': {
+    ADS_BLOCKED: 'ការផ្សាយពាណិជ្ជកម្មមុនវីដេអូត្រូវបានទប់ស្កាត់ដោយជោគជ័យ!',
+    LOW_VIEWS_RE: '^ចំនួនមើល\\s+(\\d{1,3})$',
+    MINIPLAYER: 'កម្មវិធី​ចាក់ខ្នាត​តូច',
     ORIGINAL: 'ដើម',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'កាលបរិច្ឆេទ​បង្ហោះ',
   },
   'kn-IN': {
+    ADS_BLOCKED: 'ವೀಡಿಯೊಗೆ ಮುಂಚಿನ ಜಾಹೀರಾತುಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ವೀಕ್ಷಣೆಗಳು$',
+    MINIPLAYER: 'ಮಿನಿಪ್ಲೇಯರ್',
     ORIGINAL: 'ಮೂಲ',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'ಅಪ್‌ಲೋಡ್ ದಿನಾಂಕ',
   },
   'ko-KR': {
+    ADS_BLOCKED: '동영상 시작 전 광고가 차단되었습니다!',
+    LOW_VIEWS_RE: '^조회수\\s+(\\d{1,3})회$',
+    MINIPLAYER: '소형 플레이어',
     ORIGINAL: '원본',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: '업로드 날짜',
   },
   'ky-KG': {
+    ADS_BLOCKED: 'Видеонун алдындагы жарнамалар ийгиликтүү бөгөттөлдү!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+жолу\\s+көрүлдү$',
+    MINIPLAYER: 'Мини ойноткуч',
     ORIGINAL: 'түпнуска',
     SHORTS: 'Кыска видеолор',
+    UPLOAD_DATE: 'Жүктөлгөн күнү',
   },
   'lo-LA': {
+    ADS_BLOCKED: 'ບລັອກໂຄສະນາກ່ອນວິດີໂອສຳເລັດແລ້ວ!',
+    LOW_VIEWS_RE: '^ຍອດເບິ່ງ\\s+(\\d{1,3})\\s+ເທື່ອ$',
+    MINIPLAYER: 'ຕົວຫຼິ້ນຂະໜາດນ້ອຍ',
     ORIGINAL: 'ຕົ້ນສະບັບ',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'ວັນທີອັບໂຫລດ',
   },
   'lt-LT': {
+    ADS_BLOCKED: 'Reklama prieš vaizdo įrašą sėkmingai užblokuota!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+views$',
+    MINIPLAYER: 'Sumažinta leistuvė',
     ORIGINAL: 'pradinis',
     SHORTS: 'Klipukai',
+    UPLOAD_DATE: 'Įkėlimo data',
   },
   'lv-LV': {
+    ADS_BLOCKED: 'Reklāmas pirms video veiksmīgi bloķētas!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+skatījumi$',
+    MINIPLAYER: 'Mini atskaņotājs',
     ORIGINAL: 'oriģināls',
     SHORTS: 'Īsie videoklipi',
+    UPLOAD_DATE: 'Augšupielādes datums',
   },
   'mk-MK': {
+    ADS_BLOCKED: 'Рекламите пред видеото се успешно блокирани!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+прегледи$',
+    MINIPLAYER: 'Миниплеер',
     ORIGINAL: 'оригинален',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Датум на прикачување',
   },
   'ml-IN': {
+    ADS_BLOCKED: 'വീഡിയോയ്ക്ക് മുമ്പുള്ള പരസ്യങ്ങൾ വിജയകരമായി തടഞ്ഞു!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+കാഴ്‌ച$',
+    MINIPLAYER: 'മിനിപ്ലേയർ',
     ORIGINAL: 'ഒറിജിനൽ',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'അപ്‌ലോഡ് തീയതി',
   },
   'mn-MN': {
+    ADS_BLOCKED: 'Видеоны өмнөх сурталчилгааг амжилттай хаасан!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+үзэлт$',
+    MINIPLAYER: 'Мини тоглуулагч',
     ORIGINAL: 'эх хувь',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Байршуулсан огноо',
   },
   'mr-IN': {
+    ADS_BLOCKED:
+      'व्हिडिओ सुरू होण्याआधीच्या जाहिराती यशस्वीरित्या ब्लॉक केल्या!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+व्ह्यू$',
+    MINIPLAYER: 'मिनीप्लेअर',
     ORIGINAL: 'मूळ',
     SHORTS: 'शॉर्ट',
+    UPLOAD_DATE: 'अपलोड केल्याची तारीख',
   },
   'ms-MY': {
+    ADS_BLOCKED: 'Iklan pra-roll berjaya disekat!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+tontonan$',
+    MINIPLAYER: 'Pemain mini',
     ORIGINAL: 'asal',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Tarikh muat naik',
   },
   'my-MM': {
+    ADS_BLOCKED: 'ဗီဒီယိုမစမီ ကြော်ငြာများကို အောင်မြင်စွာ ပိတ်လိုက်ပါပြီ!',
+    LOW_VIEWS_RE: '^ကြည့်ရှုမှု\\s+(\\d{1,3})$',
+    MINIPLAYER: 'မီနီပလေယာ',
     ORIGINAL: 'မူရင်း',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'တင်ခဲ့သည့် နေ့စွဲ',
   },
   'nb-NO': {
+    ADS_BLOCKED: 'Pre-roll annonser blokkert!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+avspillinger$',
+    MINIPLAYER: 'Minispiller',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Opplastingsdato',
   },
   'ne-NP': {
+    ADS_BLOCKED: 'भिडियो सुरु हुनु अघिको विज्ञापन सफलतापूर्वक रोकियो!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+भ्यु$',
+    MINIPLAYER: 'मिनिप्लेयर',
     ORIGINAL: 'मूल',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'अपलोड गरिएको मिति',
   },
   'nl-NL': {
+    ADS_BLOCKED: 'Pre-roll advertenties succesvol geblokkeerd!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+weergaven$',
+    MINIPLAYER: 'Minispeler',
     ORIGINAL: 'Originele',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Upload-datum',
   },
   'or-IN': {
+    ADS_BLOCKED: 'ଭିଡିଓ ପୂର୍ବର ବିଜ୍ଞାପନ ସଫଳତାର ସହ ଅବରୋଧ କରାଗଲା!',
+    LOW_VIEWS_RE: '^(\\d{1,3})ଟି\\s+ଭ୍ୟୁ$',
+    MINIPLAYER: 'ମିନି ପ୍ଲେୟାର',
     ORIGINAL: 'ମୂଳ',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'ଅପଲୋଡ୍ ତାରିଖ',
   },
   'pa-Guru-IN': {
+    ADS_BLOCKED: 'ਵੀਡੀਓ ਤੋਂ ਪਹਿਲਾਂ ਵਾਲੇ ਇਸ਼ਤਿਹਾਰ ਸਫਲਤਾਪੂਰਵਕ ਬਲੌਕ ਕੀਤੇ ਗਏ!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ਵਾਰ\\s+ਦੇਖਿਆ$',
+    MINIPLAYER: 'ਮਿਨੀ ਪਲੇਅਰ',
     ORIGINAL: 'ਮੂਲ',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'ਅੱਪਲੋਡ ਕਰਨ ਦੀ ਤਾਰੀਖ',
   },
   'pl-PL': {
+    ADS_BLOCKED: 'Reklamy przed filmem pomyślnie zablokowane!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+wyświetleń$',
+    MINIPLAYER: 'Miniodtwarzacz',
     ORIGINAL: 'oryginalny',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Data przesłania',
   },
   'pt-BR': {
+    ADS_BLOCKED: 'Anúncios pré-roll bloqueados com sucesso!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visualizações$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Data de envio',
   },
   'pt-PT': {
+    ADS_BLOCKED: 'Anúncios pré-roll bloqueados com sucesso!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+visualizações$',
+    MINIPLAYER: 'Minileitor',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Data de carregamento',
   },
   'ro-RO': {
+    ADS_BLOCKED: 'Reclamele pre-roll au fost blocate cu succes!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+vizionări$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Data încărcării',
   },
   'ru-RU': {
+    ADS_BLOCKED: 'Реклама перед видео успешно заблокирована!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+просмотров$',
+    MINIPLAYER: 'Мини-проигрыватель',
     ORIGINAL: 'оригинальная',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Дата загрузки',
   },
   'si-LK': {
+    ADS_BLOCKED: 'වීඩියෝවට පෙර දැන්වීම් සාර්ථකව අවහිර කරන ලදී!',
+    LOW_VIEWS_RE: '^බැලීම්\\s+(\\d{1,3})$',
+    MINIPLAYER: 'කුඩා වාදකය',
     ORIGINAL: 'මුල්',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'උඩුගත කළ දිනය',
   },
   'sk-SK': {
+    ADS_BLOCKED: 'Reklamy pred videom boli úspešne zablokované!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+zhliadnutí$',
+    MINIPLAYER: 'Miniprehrávač',
     ORIGINAL: 'pôvodná',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Dátum nahrania',
   },
   'sl-SI': {
+    ADS_BLOCKED: 'Oglasi pred predvajanjem uspešno blokirani!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ogledov$',
+    MINIPLAYER: 'Minipredvajalnik',
     ORIGINAL: 'Izvirnik',
     SHORTS: 'Kratki videoposnetki',
+    UPLOAD_DATE: 'Datum nalaganja',
   },
   'sq-AL': {
+    ADS_BLOCKED: 'Reklamat para videos u bllokuan me sukses!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+shikime$',
+    MINIPLAYER: 'Miniluajtësi',
     ORIGINAL: 'origjinale',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Data e ngarkimit',
   },
   'sr-Cyrl-RS': {
+    ADS_BLOCKED: 'Рекламе пре видеа су успешно блокиране!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+прегледа$',
+    MINIPLAYER: 'Мини-плејер',
     ORIGINAL: 'оригинална',
     SHORTS: 'Шортси',
+    UPLOAD_DATE: 'Датум отпремања',
   },
   'sr-Latn-RS': {
+    ADS_BLOCKED: 'Reklame pre videa su uspešno blokirane!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+pregleda$',
+    MINIPLAYER: 'Mini-plejer',
     ORIGINAL: 'originalna',
     SHORTS: 'Šortsi',
+    UPLOAD_DATE: 'Datum otpremanja',
   },
   'sw-TZ': {
+    ADS_BLOCKED: 'Matangazo ya kabla ya video yamezuiwa!',
+    LOW_VIEWS_RE: '^Kutazamwa:\\s+(\\d{1,3})$',
+    MINIPLAYER: 'Kichezaji kidogo',
     ORIGINAL: 'halisi',
     SHORTS: 'Video Fupi',
+    UPLOAD_DATE: 'Tarehe ya kupakia',
   },
   'ta-IN': {
+    ADS_BLOCKED: 'வீடியோவிற்கு முந்தைய விளம்பரங்கள் வெற்றிகரமாக முடக்கப்பட்டன!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+பார்வைகள்$',
+    MINIPLAYER: 'மினிபிளேயர்',
     ORIGINAL: 'அசல்',
     SHORTS: 'Shorts வீடியோக்கள்',
+    UPLOAD_DATE: 'பதிவேற்றிய தேதி',
   },
   'te-IN': {
+    ADS_BLOCKED: 'వీడియోకి ముందు వచ్చే యాడ్స్ విజయవంతంగా నిరోధించబడ్డాయి!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+వీక్షణలు$',
+    MINIPLAYER: 'మినీ ప్లేయర్',
     ORIGINAL: 'అసలైనది',
     SHORTS: 'షార్ట్‌లు',
+    UPLOAD_DATE: 'అప్‌లోడ్ తేదీ',
   },
   'th-TH': {
+    ADS_BLOCKED: 'บล็อกโฆษณาก่อนเล่นวิดีโอเรียบร้อยแล้ว!',
+    LOW_VIEWS_RE: '^การดู\\s+(\\d{1,3})\\s+ครั้ง$',
+    MINIPLAYER: 'มินิเพลเยอร์',
     ORIGINAL: 'เสียงต้นฉบับ',
     SHORTS: 'วิดีโอสั้น',
+    UPLOAD_DATE: 'วันที่อัปโหลด',
   },
   'tr-TR': {
+    ADS_BLOCKED: 'Video öncesi reklamlar başarıyla engellendi!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+görüntüleme$',
+    MINIPLAYER: 'Mini oynatıcı',
     ORIGINAL: 'orijinal',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Yükleme tarihi',
   },
   'uk-UA': {
+    ADS_BLOCKED: 'Рекламу перед відео успішно заблоковано!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+переглядів$',
+    MINIPLAYER: 'Мініпрогравач',
     ORIGINAL: 'оригінал',
     SHORTS: 'Відео Shorts',
+    UPLOAD_DATE: 'Дата завантаження',
   },
   'ur-PK': {
+    ADS_BLOCKED: 'ویڈیو سے پہلے آنے والے اشتہارات کامیابی سے بلاک کر دیے گئے!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ملاحظات$',
+    MINIPLAYER: 'مِنی پلیئر',
     ORIGINAL: 'اصل',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'اپ لوڈ کرنے کی تاریخ',
   },
   'uz-Latn-UZ': {
+    ADS_BLOCKED: 'Video oldidan reklamalar muvaffaqiyatli bloklandi!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+marta$',
+    MINIPLAYER: 'Miniplayer',
     ORIGINAL: 'original',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Yuklangan sana',
   },
   'vi-VN': {
+    ADS_BLOCKED: 'Đã chặn thành công quảng cáo đầu video!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+lượt\\s+xem$',
+    MINIPLAYER: 'Trình phát thu nhỏ',
     ORIGINAL: 'gốc',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: 'Ngày tải lên',
   },
   'zh-Hans-CN': {
+    ADS_BLOCKED: '片头广告已成功拦截！',
     CLIP: '剪辑',
     COLLABORATORS: '联合创作者',
     HIDE_CHANNEL: '隐藏频道',
+    LOW_VIEWS_RE: '^(\\d{1,3})次观看$',
+    MINIPLAYER: '迷你播放器',
     MIXES: '合辑',
     ORIGINAL: '原始',
     SHARE: '分享',
@@ -478,18 +792,31 @@ const locales = {
     TELL_US_WHY: '告诉我们原因',
     THANKS: '感谢',
     UNHIDE_CHANNEL: '取消隐藏频道',
+    UPLOAD_DATE: '上传日期',
   },
   'zh-Hant-HK': {
+    ADS_BLOCKED: '影片前廣告已成功封鎖！',
+    LOW_VIEWS_RE: '^收看次數：(\\d{1,3})\\s+次$',
+    MINIPLAYER: '迷你播放器',
     ORIGINAL: '原聲',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: '上載日期',
   },
   'zh-Hant-TW': {
+    ADS_BLOCKED: '影片前廣告已成功封鎖！',
+    LOW_VIEWS_RE: '^觀看次數：(\\d{1,3})次$',
+    MINIPLAYER: '迷你播放器',
     ORIGINAL: '原文',
     SHORTS: 'Shorts',
+    UPLOAD_DATE: '上傳日期',
   },
   'zu-ZA': {
+    ADS_BLOCKED: 'Izikhangiso zangaphambi kwevidiyo zivinjwe ngempumelelo!',
+    LOW_VIEWS_RE: '^(\\d{1,3})\\s+ukubukwa$',
+    MINIPLAYER: 'Isidlali Esincane',
     ORIGINAL: 'yokuqala',
     SHORTS: 'Okufushane',
+    UPLOAD_DATE: 'Idethi yokulayisha',
   },
 }
 
@@ -512,7 +839,7 @@ function getString(code) {
 
 function getYtString(...keys) {
   for (let key of keys) {
-    // @ts-ignore
+    // @ts-expect-error
     let string = window.ytcfg?.msgs?.[key]
     if (string) return string
   }
@@ -521,12 +848,14 @@ function getYtString(...keys) {
 //#endregion
 
 //#region Constants
-const undoHideDelayMs = 5000
+const ANIMATE_HIDE_DURATION_MS = 350
+const UNDO_HIDE_DELAY_MS = 5000
 
 const Classes = {
   HIDE_CHANNEL: 'cpfyt-hide-channel',
   HIDE_COLLABORATIONS: 'cpfyt-hide-collaborations',
   HIDE_HIDDEN: 'cpfyt-hide-hidden',
+  HIDE_LOW_VIEWS: 'cpfyt-hide-low-views',
   HIDE_OPEN_APP: 'cpfyt-hide-open-app',
   HIDE_STREAMED: 'cpfyt-hide-streamed',
   HIDE_WATCHED: 'cpfyt-hide-watched',
@@ -561,22 +890,31 @@ const Svgs = {
 }
 
 // YouTube channel URLs: https://support.google.com/youtube/answer/6180214
-const URL_CHANNEL_RE = /\/(?:@[^\/]+|(?:c|channel|user)\/[^\/]+)(?:\/(featured|videos|shorts|streams|playlists|community|posts|membership|search))?\/?$/
+const URL_CHANNEL_RE = /\/(?:@[^\/]+|(?:c|channel|user)\/[^\/]+)(?:\/(featured|videos|shorts|streams|podcasts|playlists|community|posts|membership|search))?\/?$/
+const URL_CHANNEL_TAB_RE = /\/(featured|videos|shorts|streams|podcasts|playlists|community|posts|membership|search)\/?$/
 //#endregion
 
 //#region State
-/** @type {boolean} */
-let realDocumentHidden
-/** @type {Map<string, import("./types").Disconnectable>} */
-let globalObservers = new Map()
-/** @type {import("./types").Channel} */
-let lastClickedChannel
 /** @type {HTMLElement} */
 let $lastClickedElement
+/** @type {number} */
+let effectiveGridItemsPerRow
+/** @type {'auto' | 'minimum' | 'relative'} */
+let effectiveGridMode
+/** @type {Map<string, import("./types").Disconnectable>} */
+let globalObservers = new Map()
+/** @type {ReturnType<createHideAnimationController>} */
+let hideAnimationController
+/** @type {import("./types").Channel} */
+let lastClickedChannel
+/** @type {number} */
+let lastElementsPerRow
 /** @type {() => void} */
 let onDialogClosed
 /** @type {Map<string, import("./types").Disconnectable>} */
 let pageObservers = new Map()
+/** @type {boolean} */
+let realDocumentHidden
 //#endregion
 
 //#region Utilities
@@ -587,6 +925,60 @@ function addStyle(css = '') {
   }
   document.documentElement.appendChild($style)
   return $style
+}
+
+function createHideAnimationController() {
+  /** @type {() => void} */
+  let cleanupActiveAnimation = null
+  let disconnected = false
+  /** @type {Set<Element>} */
+  let pendingHideElements = new Set()
+  let pendingTimers = 0
+
+  function flush() {
+    if (disconnected || pendingHideElements.size == 0) return
+    let itemsToHide = Array.from(pendingHideElements)
+    pendingHideElements.clear()
+    cleanupActiveAnimation = animateHidingHiddenItems(itemsToHide)
+  }
+
+  function maybeFlush() {
+    if (disconnected) return
+    if (--pendingTimers <= 0) {
+      flush()
+    }
+  }
+
+  pageObservers.set('hide animation controller', {
+    disconnect() {
+      disconnected = true
+      hideAnimationController = null
+      cleanupActiveAnimation?.()
+    }
+  })
+
+  return {
+    enqueue(element) {
+      if (disconnected || !element) return
+      pendingHideElements.add(element)
+      pendingTimers++
+      log('enqueued', {pendingTimers})
+    },
+    dequeue(element) {
+      if (disconnected || !element) return
+      if (pendingHideElements.delete(element)) {
+        maybeFlush()
+      }
+    },
+    expire() {
+      if (disconnected) return
+      maybeFlush()
+    },
+    remove(element) {
+      if (disconnected || !element) return
+      pendingHideElements.delete(element)
+    }
+  }
 }
 
 function currentUrlChanges() {
@@ -615,6 +1007,10 @@ function disconnectObservers(observers, scope) {
   logObserverDisconnects = false
   for (let observer of observers.values()) observer.disconnect()
   logObserverDisconnects = true
+}
+
+function frame() {
+  return new Promise((resolve) => requestAnimationFrame(resolve))
 }
 
 function getCurrentUrl() {
@@ -681,7 +1077,13 @@ function getElement(selector, {
  })
 }
 
-// @ts-ignore
+function getGridPagesNeedingGhostCardFix() {
+  return [
+    !config.displayHomeGridAsList && 'home',
+    !config.displaySubscriptionsGridAsList && 'subscriptions',
+  ].filter(Boolean)
+}
+
 let policy = window.trustedTypes?.createPolicy?.('tagged-html-policy', {createHTML: (s) => s}) || {createHTML: (s) => s}
 function html(strings, ...values) {
   return /** @type {string} */ (policy.createHTML(strings.reduce((acc, str, i) => acc + str + (values[i] || ''), '')))
@@ -710,7 +1112,9 @@ let logObserverDisconnects = true
  * @param {MutationCallback} callback
  * @param {{
  *   leading?: boolean
+ *   logDisconnect?: boolean
  *   logElement?: boolean
+ *   logObserve?: boolean
  *   name: string
  *   observers: Map<string, import("./types").Disconnectable> | Map<string, import("./types").Disconnectable>[]
  *   onDisconnect?: () => void
@@ -719,7 +1123,7 @@ let logObserverDisconnects = true
  * @return {import("./types").CustomMutationObserver}
  */
 function observeElement($target, callback, options, mutationObserverOptions = {childList: true}) {
-  let {leading, logElement, name, observers, onDisconnect} = options
+  let {leading, logDisconnect = true, logElement, logObserve = true, name, observers, onDisconnect} = options
   let observerMaps = Array.isArray(observers) ? observers : [observers]
 
   /** @type {import("./types").CustomMutationObserver} */
@@ -732,23 +1136,27 @@ function observeElement($target, callback, options, mutationObserverOptions = {c
     disconnect()
     for (let map of observerMaps) map.delete(name)
     onDisconnect?.()
-    if (logObserverDisconnects) {
+    if (logDisconnect && logObserverDisconnects) {
       log(`disconnected ${name} observer`)
     }
   }
 
   if (observerMaps[0].has(name)) {
-    log(`disconnecting existing ${name} observer`)
+    if (logDisconnect) {
+      log(`disconnecting existing ${name} observer`)
+    }
     logObserverDisconnects = false
     observerMaps[0].get(name).disconnect()
     logObserverDisconnects = true
   }
 
   for (let map of observerMaps) map.set(name, observer)
-  if (logElement) {
-    log(`observing ${name}`, $target)
-  } else {
-    log(`observing ${name}`)
+  if (logObserve) {
+    if (logElement) {
+      log(`observing ${name}`, $target)
+    } else {
+      log(`observing ${name}`)
+    }
   }
   observer.observe($target, mutationObserverOptions)
   if (leading) {
@@ -803,13 +1211,22 @@ const configureCss = (() => {
 
   return function configureCss() {
     if (!config.enabled) {
-      log('removing stylesheet')
+      log('removing main stylesheet')
       $style?.remove()
       $style = null
       return
     }
 
-    let cssRules = []
+    let cssRules = [`
+      .cpfyt-vanishing-flip {
+        transition: opacity ${ANIMATE_HIDE_DURATION_MS}ms ease-out, transform ${ANIMATE_HIDE_DURATION_MS}ms ease-out !important;
+        opacity: 0 !important;
+        transform: scale(0.6) !important;
+        transform-origin: center center !important;
+        pointer-events: none !important;
+        box-sizing: border-box !important;
+      }
+    `]
     let hideCssSelectors = []
 
     if (config.alwaysShowShortsProgressBar) {
@@ -860,9 +1277,15 @@ const configureCss = (() => {
     }
 
     if (config.hideAI) {
-      // e.g. https://www.youtube.com/results?search_query=howtobasic+wedges
       if (desktop) {
-        hideCssSelectors.push(`#expandable-metadata:has(path[d="${Svgs.GEMINI_PATH_DESKTOP}"])`)
+        hideCssSelectors.push(
+          // Summary in Search and under video
+          // e.g. https://www.youtube.com/results?search_query=howtobasic+wedges
+          `#expandable-metadata:has(path[d="${Svgs.GEMINI_PATH_DESKTOP}"])`,
+          // Summary in video description
+          // e.g. https://www.youtube.com/watch?v=9AI8IBaWbTc
+          '#video-summary.ytd-structured-description-content-renderer',
+        )
       }
       if (mobile) {
         hideCssSelectors.push(`ytm-expandable-metadata-renderer:has(path[d="${Svgs.GEMINI_PATH_MOBILE}"])`)
@@ -883,12 +1306,16 @@ const configureCss = (() => {
       const autoDubbedSvgPath = 'path[d="M19.4.2a1 1 0 00-.2 1.4 9 9 0 01-.022 10.83 1 1 0 001.595 1.206A11 11 0 0020.8.4a1 1 0 00-1.4-.2ZM10 2a5 5 0 100 10 5 5 0 000-10Zm6.17.3a1 1 0 00-.028 1.414c.895.932 1.365 2.114 1.358 3.312-.006 1.199-.49 2.378-1.396 3.302a1.001 1.001 0 101.427 1.4c1.257-1.281 1.959-2.953 1.969-4.69.009-1.738-.673-3.416-1.916-4.71A1 1 0 0016.17 2.3ZM10 13a8 8 0 00-8 8 1 1 0 001 1h14l.102-.005A1 1 0 0018 21a8 8 0 00-8-8Z"]'
       if (desktop) {
         hideCssSelectors.push(
+          // Home
+          `ytd-browse[page-subtype="home"] ytd-rich-item-renderer:has(${autoDubbedSvgPath})`,
           // Related
           `#related yt-lockup-view-model:has(${autoDubbedSvgPath})`
         )
       }
       if (mobile) {
         hideCssSelectors.push(
+          // Home
+          `.tab-content[tab-identifier="FEwhat_to_watch"] ytm-rich-item-renderer:has(${autoDubbedSvgPath})`,
           // Related
           `ytm-item-section-renderer[section-identifier="related-items"] ytm-video-with-context-renderer:has(${autoDubbedSvgPath})`,
         )
@@ -1062,11 +1489,9 @@ const configureCss = (() => {
         .cpfyt-pie {
           --cpfyt-pie-delay: 0ms;
           --cpfyt-pie-direction: normal;
-          --cpfyt-pie-duration: ${undoHideDelayMs}ms;
-          --cpfyt-pie-fontSize: 200%;
+          --cpfyt-pie-duration: ${UNDO_HIDE_DELAY_MS}ms;
           width: 1em;
           height: 1em;
-          font-size: var(--cpfyt-pie-fontSize);
           position: relative;
           border-radius: 50%;
           margin: 0.5em;
@@ -1111,6 +1536,24 @@ const configureCss = (() => {
           }
         }
       `)
+      if (desktop) {
+        cssRules.push(`
+          #text.ytd-notification-multi-action-renderer {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+          }
+        `)
+      }
+      if (mobile) {
+        cssRules.push(`
+          ytm-notification-multi-action-renderer .notification-multi-action-text-wrapper {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+          }
+        `)
+      }
       if (debugManualHiding) {
         cssRules.push(`.${Classes.HIDE_HIDDEN} { outline: 2px solid magenta !important; }`)
       } else {
@@ -1168,6 +1611,14 @@ const configureCss = (() => {
       }
     }
 
+    if (config.hideLowViews) {
+      if (debugManualHiding) {
+        cssRules.push(`.${Classes.HIDE_LOW_VIEWS} { outline: 2px solid hotpink !important; }`)
+      } else {
+        hideCssSelectors.push(`.${Classes.HIDE_LOW_VIEWS}`)
+      }
+    }
+
     if (config.hideMembersOnly) {
       if (desktop) {
         hideCssSelectors.push(
@@ -1214,10 +1665,12 @@ const configureCss = (() => {
     if (config.hideMetadata) {
       if (desktop) {
         hideCssSelectors.push(
-          // Channel name / Videos / About (but not Transcript or their mutual container)
+          // Channel name / Videos / About below video
           '#structured-description .ytd-structured-description-content-renderer:not(#items, ytd-video-description-transcript-section-renderer)',
-          // Game name and Gaming link
+          // Game below video
           '#above-the-fold + ytd-metadata-row-container-renderer',
+          // Game / Infocards in full screen description panel
+          'ytd-structured-description-content-renderer[panel-target-id="engagement-panel-structured-description"] .ytd-structured-description-content-renderer:not(#items, ytd-video-description-header-renderer, ytd-expandable-video-description-body-renderer, ytd-video-description-transcript-section-renderer)',
         )
       }
       if (mobile) {
@@ -1333,7 +1786,7 @@ const configureCss = (() => {
     }
 
     if (config.hidePremiumUpsells) {
-      if (desktop) {
+      if (desktop && !isDesktopPremium()) {
         hideCssSelectors.push(
           // Sidebar item
           '#endpoint.ytd-guide-entry-renderer[href="/premium"]',
@@ -1342,6 +1795,8 @@ const configureCss = (() => {
           'yt-download-list-item-view-model',
           // 1080p Premium quality menu item
           '.ytp-quality-menu .ytp-menuitem:has(.ytp-premium-label)',
+          // 4x Premium playback speed menu item
+          '.ytp-settings-menu .ytp-menuitem[role="menuitemradio"]:has(.ytp-menuitem-premium-badge)',
           // Download button
           'ytd-download-button-renderer',
         )
@@ -1386,6 +1841,8 @@ const configureCss = (() => {
         hideCssSelectors.push(
           // Video button
           `ytm-slim-video-action-bar-renderer button-view-model:has(button[aria-label="${getString('SHARE')}"])`,
+          // Menu items
+          `.${Classes.HIDE_SHARE_THANKS_CLIP}`,
           // Shorts button
           '.reel-player-overlay-actions .icon-shorts_share',
           // Shorts button (new UI)
@@ -1533,6 +1990,8 @@ const configureCss = (() => {
           'ytd-browse[page-subtype="home"] ytd-rich-section-renderer:not(:has(> #content > ytd-rich-shelf-renderer[is-shorts]))',
           // Looking for something different? tile in Home
           'ytd-browse[page-subtype="home"] ytd-rich-item-renderer:has(> #content > ytd-feed-nudge-renderer)',
+          // "Most relevant" shelf in Subscriptions
+          'ytd-browse[page-subtype="subscriptions"] ytd-rich-section-renderer:not(:first-child):not(:has(> #content > ytd-rich-shelf-renderer[is-shorts]))',
           // Suggested content shelves in Search
           `ytd-search #contents.ytd-item-section-renderer > ytd-shelf-renderer`,
           // People also search for in Search
@@ -1550,6 +2009,8 @@ const configureCss = (() => {
             '.tab-content[tab-identifier="FEwhat_to_watch"] ytm-rich-section-renderer:not(:has(> div > ytm-backstage-post-thread-renderer))',
             // Looking for something different? tile in Home
             'ytm-rich-item-renderer:has(> .feed-nudge-wrapper)',
+            // "Most relevant" shelf in Subscriptions
+            '.tab-content[tab-identifier="FEsubscriptions"] ytm-item-section-renderer:has(> lazy-list > ytm-horizontal-card-list-renderer)',
           )
         } else {
           // Logged-out users can get "Try searching to get started" Home page
@@ -1606,27 +2067,6 @@ const configureCss = (() => {
     }
 
     if (config.playerHideFullScreenMoreVideos) {
-      if (desktop) {
-        hideCssSelectors.push('.ytp-fullscreen-grid')
-        cssRules.push(`
-          /* Prevent full screen player from visually scrolling */
-          #movie_player.ytp-delhi-modern {
-            --ytp-grid-scroll-percentage: 0 !important;
-          }
-          /* Prevent controls moving and hiding when full screen is scrolled */
-          .ytp-delhi-modern:is(.ytp-grid-scrolling, .ytp-fullscreen-grid-active) .ytp-chrome-bottom {
-            bottom: 0 !important;
-            opacity: 1 !important;
-          }
-          .ytp-delhi-modern.ytp-fullscreen-grid-active .ytp-chrome-bottom {
-            display: block !important;
-          }
-          /* Hide full screen scrolling gradient */
-          .ytp-delhi-modern .ytp-gradient-bottom {
-            display: none !important;
-          }
-        `)
-      }
       if (mobile) {
         hideCssSelectors.push('.fullscreen-watch-next-entrypoint-wrapper')
       }
@@ -1709,6 +2149,7 @@ const configureCss = (() => {
           .rich-thumbnail.ytd-ghost-grid-renderer,
           /* Players */
           ytd-watch-flexy[rounded-player] #ytd-player.ytd-watch-flexy,
+          ytd-channel-video-player-renderer[rounded] #player.ytd-channel-video-player-renderer,
           .ytdMiniplayerComponentContent,
           .ytp-miniplayer-scrim,
           /* Under video */
@@ -1762,37 +2203,96 @@ const configureCss = (() => {
     //#region Desktop-only
     if (desktop) {
       // Fix spaces & gaps caused by left gutter margin on first column items
+      // when we hide videos in grids.
+      let gridPagesToFix = [
+        'channels',
+        !config.displayHomeGridAsList && 'home',
+        !config.displaySubscriptionsGridAsList && 'subscriptions',
+      ].filter(Boolean)
       cssRules.push(`
-        /* Remove left gutter margin from first column items */
-        ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"], [page-subtype="channels"]) ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
-          margin-left: calc(var(--ytd-rich-grid-item-margin, 16px) / 2) !important;
-        }
-        /* Apply the left gutter as padding in the grid contents instead */
-        ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"], [page-subtype="channels"]) #contents.ytd-rich-grid-renderer {
-          padding-left: calc(var(--ytd-rich-grid-gutter-margin, 16px) * 2) !important;
-        }
-        /* Adjust non-grid items so they don't double the gutter */
-        ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"]) #contents.ytd-rich-grid-renderer > :not(ytd-rich-item-renderer) {
-          margin-left: calc(var(--ytd-rich-grid-gutter-margin, 16px) * -1) !important;
+        ytd-browse:is(${gridPagesToFix.map(page => `[page-subtype="${page}"]`).join(', ')}) {
+          /* Remove left gutter margin from first column items */
+          ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
+            margin-left: calc(var(--ytd-rich-grid-item-margin, 16px) / 2) !important;
+          }
+          /* Apply the left gutter as padding in the grid contents instead */
+          #contents.ytd-rich-grid-renderer {
+            padding-left: calc(var(--ytd-rich-grid-gutter-margin, 16px) * 2) !important;
+          }
+          /* Adjust non-grid items so they don't double the gutter */
+          #contents.ytd-rich-grid-renderer > :not(ytd-rich-item-renderer, ytd-continuation-item-renderer) {
+            margin-left: calc(var(--ytd-rich-grid-gutter-margin, 16px) * -1) !important;
+          }
         }
       `)
+
+      let gridPagesNeedingGhostCardFix = getGridPagesNeedingGhostCardFix()
+      if (config.fixGhostCards && gridPagesNeedingGhostCardFix.length > 0) {
+        let pageSelector = `ytd-browse:is(${gridPagesNeedingGhostCardFix.map(page => `[page-subtype="${page}"]`).join(', ')})`
+        cssRules.push(`
+          ${pageSelector} {
+            /* Make continuation item renderer retain position but take up no space */
+            ytd-continuation-item-renderer {
+              height: 1px;
+              margin-left: -1px;
+              max-width: 1px;
+              opacity: 0;
+              overflow: hidden;
+              pointer-events: none;
+            }
+            .cpfyt-ghost-cards {
+              display: contents;
+            }
+            .ghost-card {
+              --ytd-rich-item-row-usable-width: calc(100% - var(--ytd-rich-grid-gutter-margin)*2);
+              margin-bottom: var(--ytd-rich-grid-row-margin);
+              width: calc(var(--ytd-rich-item-row-usable-width)/var(--ytd-rich-grid-items-per-row) - var(--ytd-rich-grid-item-margin) - .01px);
+            }
+          }
+          /* Container for cloned loading spinner */
+          .cpfyt-grid-spinner {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+          }
+        `)
+        // XXX Revert CSS from the "Youtube-shorts block" extension which breaks loading
+        //     https://github.com/insin/control-panel-for-youtube/issues/223
+        cssRules.push(`
+          ${pageSelector} {
+            ytd-continuation-item-renderer:not(:last-child):not(#comments *):not([style*="display: none"]) {
+              display: flex !important;
+            }
+          }
+        `)
+      }
+
       if (!config.addTakeSnapshot) {
         hideCssSelectors.push('#cpfyt-snaphot-menu-item')
       }
       if (config.disableThemedHover) {
         cssRules.push(`
-          /* Home thumbnails */
+          /* Videos */
           html {
             --cpfyt-title-color: #0f0f0f;
             --cpfyt-metadata-color: #606060;
+            --cpfyt-touch-response-color: #000;
           }
           html[dark] {
             --cpfyt-title-color: #f1f1f1;
             --cpfyt-metadata-color: #aaa;
+            --cpfyt-touch-response-color: #fff;
           }
-          ytd-browse[page-subtype="home"] {
+          ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"]) {
             .yt-spec-touch-feedback-shape__hover-effect {
               display: none !important;
+            }
+            .yt-spec-touch-feedback-shape__stroke {
+              border-color: var(--yt-spec-touch-response, --cpfyt-touch-response-color) !important;
+            }
+            .yt-spec-touch-feedback-shape__fill {
+              background-color: var(--yt-spec-touch-response, --cpfyt-touch-response-color) !important;
             }
             .yt-lockup-metadata-view-model__title {
               color: var(--cpfyt-title-color) !important;
@@ -1801,8 +2301,8 @@ const configureCss = (() => {
               color: var(--cpfyt-metadata-color) !important;
             }
           }
-          /* Home Shorts */
-          ytd-browse[page-subtype="home"] ytd-rich-item-renderer[rich-grid-hover-highlight] {
+          /* Shorts */
+          ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"]) ytd-rich-item-renderer[rich-grid-hover-highlight] {
             background: none !important;
             box-shadow: none !important;
           }
@@ -1833,28 +2333,210 @@ const configureCss = (() => {
           }
         `)
       }
+      let gridsToList = [
+        config.displayHomeGridAsList && 'home',
+        config.displaySubscriptionsGridAsList && 'subscriptions',
+      ].filter(Boolean)
+      if (gridsToList.length > 0) {
+        let gridAsListPageSelector = `ytd-browse:is(${gridsToList.map(page => `[page-subtype="${page}"]`).join(', ')})`
+        // Turn Grid view into a List-like view
+        cssRules.push(`
+          ${gridAsListPageSelector} {
+            ytd-two-column-browse-results-renderer {
+              max-width: var(--ytd-grid-max-width, 1284px);
+            }
+            #contents.ytd-rich-grid-renderer {
+              padding-left: 0 !important;
+              padding-top: 0 !important;
+            }
+            ytd-rich-item-renderer.ytd-rich-grid-renderer {
+              width: 100%;
+              border-bottom: 1px solid var(--yt-spec-outline);
+              /* For <ytd-rich-grid-media> */
+              border-radius: 0 !important;
+              margin-left: 24px;
+              margin-right: 24px;
+              margin-bottom: 0;
+            }
+            ytd-rich-item-renderer.ytd-rich-grid-renderer #content.ytd-rich-item-renderer {
+              max-width: 862px;
+              /* <yt-lockup-view-model> */
+              &:not(:has(> ytd-rich-grid-media)) {
+                padding-bottom: 20px;
+                padding-top: 20px;
+              }
+              .yt-lockup-view-model {
+                flex-direction: row;
+              }
+              .yt-lockup-view-model__content-image {
+                flex: none;
+                width: 246px;
+                height: 138px;
+                margin-right: 16px;
+                padding-bottom: 0;
+              }
+              .yt-lockup-view-model__metadata {
+                width: 100%;
+                max-width: 600px;
+              }
+              .yt-content-metadata-view-model {
+                display: flex;
+                flex-direction: row;
+                gap: 1rem;
+              }
+              .ytDismissibleItemAspectRatio16By9 {
+                padding-top: 0;
+                min-height: 138px;
+              }
+              /* Shrink "Notify me" button */
+              .ytLockupAttachmentsViewModelHost {
+                flex-direction: row;
+              }
+              /* Movies & TV still uses <ytd-rich-grid-media> */
+              ytd-rich-grid-media.ytd-rich-item-renderer {
+                max-width: unset;
+                padding-bottom: 20px;
+                padding-top: 20px;
+              }
+              #dismissible.ytd-rich-grid-media {
+                flex-direction: row !important;
+              }
+              #thumbnail.ytd-rich-grid-media {
+                flex: none;
+                width: 246px;
+                height: 138px;
+                margin-right: 16px;
+                padding-bottom: 0;
+              }
+              h3.ytd-rich-grid-media {
+                margin-top: 0 !important;
+              }
+              #attached-survey.ytd-rich-grid-media {
+                display: none;
+              }
+              #dismissed.ytd-rich-grid-media {
+                padding-bottom: 0;
+                min-height: 136px;
+              }
+            }
+            /* Shorts shelf */
+            #dismissible.ytd-rich-shelf-renderer {
+              padding-top: 10px;
+            }
+            #dismissible.ytd-rich-shelf-renderer:not(:has(.button-container:not([hidden]) > .expand-collapse-button)) {
+              margin-bottom: 0 !important;
+              padding-bottom: 20px;
+              border-bottom: 1px solid var(--yt-spec-outline);
+            }
+            #dismissible.ytd-rich-shelf-renderer:has(.button-container:not([hidden]) > .expand-collapse-button) {
+              margin-bottom: 10px !important;
+              padding-bottom: 20px;
+            }
+            /* Only display the spinner when loading new content */
+            #ghost-cards, .cpfyt-ghost-cards {
+              display: none;
+            }
+          }
+        `)
+        if (config.displayHomeGridAsList) {
+          // Align chips with list items
+          cssRules.push(`
+            ytd-browse:is([page-subtype="home"]) {
+              #chips-content {
+                padding-left: 8px;
+              }
+            }
+          `)
+        }
+        if (config.showChannelHeadersInListView) {
+          // Move channel avatar and name up above the thumbnail
+          cssRules.push(`
+            ${gridAsListPageSelector} {
+              ytd-rich-item-renderer.ytd-rich-grid-renderer {
+                position: relative;
+              }
+              ytd-rich-item-renderer.ytd-rich-grid-renderer #content.ytd-rich-item-renderer:not(:has(> ytd-rich-grid-media)) {
+                &:not(:has(.ytDismissibleItemReplacedContent)) {
+                  padding-top: 60px;
+                }
+                .yt-lockup-view-model__metadata,
+                .yt-lockup-metadata-view-model {
+                  position: static;
+                }
+                /* Channel avatar */
+                .yt-lockup-metadata-view-model__avatar {
+                  position: absolute;
+                  top: -50px;
+                  left: 0;
+                }
+                /* Channel name */
+                .yt-content-metadata-view-model__metadata-row:first-child {
+                  position: absolute;
+                  top: -48px;
+                  left: 50px;
+                  /* #title.ytd-shelf-renderer styles */
+                  a, span {
+                    color: var(--yt-spec-text-primary);
+                    font-family: "Roboto","Arial",sans-serif;
+                    font-size: 2rem;
+                    line-height: 2.8rem;
+                    font-weight: 700;
+                    overflow: hidden;
+                    display: block;
+                    max-height: 2.8rem;
+                    -webkit-line-clamp: 1;
+                    display: box;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    text-overflow: ellipsis;
+                    white-space: normal;
+                  }
+                }
+                &:not(:has(.yt-lockup-metadata-view-model__avatar)) .yt-content-metadata-view-model__metadata-row:first-child {
+                  left: 0;
+                }
+                /* Adjust for header height */
+                .ytDismissibleItemAspectRatio16By9 {
+                  min-height: 178px;
+                }
+              }
+            }
+          `)
+        }
+      }
       if (config.fullSizeTheaterMode) {
         // TODO Observe current theater mode state to get rid of these :has()
         if (config.fullSizeTheaterModeHideHeader) {
           cssRules.push(`
-            /* Hide header */
-            #content.ytd-app:has(> #page-manager > ytd-watch-flexy[role="main"][theater]:not([fullscreen])) #masthead-container #masthead {
-              transform: translateY(-100%);
-              transition: transform .15s ease-in !important;
-            }
-            /* Slide out after a short delay on hover */
-            #content.ytd-app:has(> #page-manager > ytd-watch-flexy[role="main"][theater]:not([fullscreen])) #masthead-container:hover #masthead {
-              transform: translateY(0);
-              transition: transform .3s ease-out .35s !important;
-            }
-            /* Appear instantly when focused (e.g. press / to search) */
-            #content.ytd-app:has(> #page-manager > ytd-watch-flexy[role="main"][theater]:not([fullscreen])) #masthead-container:focus-within #masthead {
-              transform: translateY(0);
-              transition: none !important;
-            }
-            /* Reclaim header space */
-            #content.ytd-app:has(> #page-manager > ytd-watch-flexy[role="main"][theater]:not([fullscreen])) #page-manager {
-              margin-top: 0 !important;
+            #content.ytd-app:has(> #page-manager > ytd-watch-flexy[role="main"][theater]:not([fullscreen])) {
+              /* Lower the container - allow's Vivaldi's PiP control to be used */
+              #masthead-container {
+                z-index: 1 !important;
+              }
+              /* Hide header */
+              #masthead-container #masthead {
+                transform: translateY(-100%);
+                transition: transform .15s ease-in !important;
+              }
+              /* Slide out after a short delay on hover */
+              #masthead-container:hover #masthead {
+                transform: translateY(0);
+                transition: transform .3s ease-out .35s !important;
+              }
+              /* Appear instantly when focused (e.g. press / to search) */
+              #masthead-container:focus-within #masthead {
+                transform: translateY(0);
+                transition: none !important;
+              }
+              /* Reclaim header space */
+              #page-manager {
+                margin-top: 0 !important;
+              }
+              /* Hide overlays which would display under the header */
+              #movie_player .ytp-overlay-top-left,
+              #movie_player .ytp-overlay-top-right {
+                display: none;
+              }
             }
             /* Make theater mode full view height */
             ytd-watch-flexy[theater]:not([fullscreen]) #full-bleed-container.ytd-watch-flexy {
@@ -1901,8 +2583,14 @@ const configureCss = (() => {
           '#movie_player .ytp-endscreen-content',
           '#movie_player .ytp-endscreen-previous',
           '#movie_player .ytp-endscreen-next',
-          '#movie_player .ytp-fullscreen-grid-stills-container',
+          '#movie_player.ended-mode .ytp-fullscreen-grid-stills-container',
         )
+      }
+      if (config.hideExperiencingInterruptions) {
+        hideCssSelectors.push('.ExperiencingInterruptions')
+      } else {
+        // Hide "Find out why" link
+        hideCssSelectors.push('.ExperiencingInterruptions #action-button')
       }
       if (config.hideJumpAheadButton) {
         hideCssSelectors.push('#movie_player .ytp-timely-actions-content')
@@ -1941,19 +2629,6 @@ const configureCss = (() => {
           'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents > ytd-rich-section-renderer:first-child'
         )
       }
-      if (config.minimumGridItemsPerRow != 'auto') {
-        let gridItemsPerRow = Number(config.minimumGridItemsPerRow)
-        // Don't override the number of items if YouTube wants to show more
-        let exclude = []
-        for (let i = 6; i > gridItemsPerRow; i--) {
-          exclude.push(`[elements-per-row="${i}"]`)
-        }
-        cssRules.push(`
-          ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"]) ytd-rich-grid-renderer${exclude.length > 0 ? `:not(${exclude.join(', ')})` : ''} {
-            --ytd-rich-grid-items-per-row: ${gridItemsPerRow} !important;
-          }
-        `)
-      }
       if (!config.hideShorts && config.minimumShortsPerRow != 'auto') {
         let shortsPerRow = Number(config.minimumShortsPerRow)
         // Don't override the number of items if YouTube wants to show more
@@ -1975,96 +2650,37 @@ const configureCss = (() => {
             display: block !important;
           }
         `)
-        if (shortsPerRow >= 6) {
-          // Hide the Show more/Show less button if we're showing everything
-          hideCssSelectors.push('ytd-browse[page-subtype="subscriptions"] ytd-rich-shelf-renderer[is-shorts] .expand-collapse-button')
-        }
+        // TODO Add a count of the shorts in a shelf to the ytd-rich-shelf-renderer for this
+        // if (shortsPerRow >= 6) {
+        //   // Hide the Show more/Show less button if we're showing everything
+        //   hideCssSelectors.push('ytd-browse[page-subtype="subscriptions"] ytd-rich-shelf-renderer[is-shorts] .expand-collapse-button')
+        // }
       }
-      if (config.playerCompactPlayButton) {
+      if (config.playerControlsBg == 'transparent') {
         cssRules.push(`
-          /* Make normal mode Play/Pause the same size as other buttons */
-          ytd-watch-flexy .ytp-delhi-modern:not(.ytp-delhi-modern-compact-controls):not(.ytp-big-mode) {
-            .ytp-play-button {
-              width: 48px;
-              height: 48px;
-              margin-top: 12px;
-            }
-            .ytp-play-button > svg {
-              width: 24px;
-              height: 24px;
-              padding: 12px;
-            }
-            /* Move progress bar and full screen elements down */
-            .ytp-chrome-bottom {
-              --yt-delhi-bottom-controls-height: 56px;
-            }
-            &.ytp-fullscreen-grid-peeking .ytp-overlays-container {
-              bottom: 76px !important;
-            }
-            .ytp-fullscreen-grid-expand-button {
-              margin-top: -52px !important;
-            }
-            /* Prevent jumping when the progress bar is dragged */
-            .ytp-chrome-bottom:has(> .ytp-drag) {
-              height: var(--yt-delhi-bottom-controls-height) !important;
-            }
-            /* Adjust position of controls */
+          .ytp-delhi-modern {
             .ytp-left-controls > :is(button, a, .ytp-volume-area),
+            .ytp-time-wrapper,
+            .ytp-chapter-title,
             .ytp-right-controls {
-              margin-top: 4px !important;
-            }
-            /* Make time display and chapters smaller */
-            .ytp-time-wrapper, button.ytp-chapter-title {
-              height: 40px !important;
-            }
-            .ytp-time-contents, .ytp-chapter-container {
-              line-height: 40px !important;
-            }
-            .ytp-time-display, .ytp-chapter-container {
-              padding: 8px !important;
+              background: transparent !important;
             }
           }
-          /* Make big mode Play/Pause the same size as other buttons */
-          ytd-watch-flexy .ytp-delhi-modern.ytp-big-mode {
-            .ytp-play-button {
-              width: 56px !important;
-              height: 56px !important;
-              margin-top: 4px !important;
-            }
-            .ytp-play-button > svg {
-              width: 24px;
-              height: 24px;
-              padding: 16px !important;
-            }
-            /* Move progress bar and full screen elements down */
-            .ytp-chrome-bottom {
-              --yt-delhi-big-mode-bottom-controls-height: 64px;
-            }
-            &.ytp-fullscreen-grid-peeking .ytp-overlays-container {
-              bottom: 84px !important;
-            }
-            .ytp-fullscreen-grid-expand-button {
-              margin-top: -60px !important;
-            }
-            /* Prevent jumping when the progress bar is dragged */
-            .ytp-chrome-bottom:has(> .ytp-drag) {
-              height: var(--yt-delhi-big-mode-bottom-controls-height) !important;
-            }
-            /* Adjust position of controls */
-            .ytp-left-controls > :is(button, a, .ytp-volume-area),
-            .ytp-right-controls {
-              margin-top: 4px !important;
-            }
-            /* Make time display and chapters smaller */
-            .ytp-time-wrapper, button.ytp-chapter-title {
-              height: 40px !important;
-            }
-            .ytp-time-contents, .ytp-chapter-container {
-              line-height: 40px !important;
-            }
-            .ytp-time-display, .ytp-chapter-container {
-              padding: 12px !important;
-            }
+          .ytp-big-mode .ytp-fullscreen-grid-expand-button {
+            background: transparent !important;
+          }
+          .ytPlayerQuickActionButtonsHost {
+            background: transparent !important;
+          }
+        `)
+      }
+      if (config.playerControlsBg == 'blur') {
+        cssRules.push(`
+          #movie_player {
+            --yt-frosted-glass-backdrop-filter-override: unset !important;
+          }
+          .ytPlayerQuickActionButtonsHost {
+            backdrop-filter: blur(16px) !important;
           }
         `)
       }
@@ -2091,24 +2707,6 @@ const configureCss = (() => {
       if (config.playerHideFullScreenVoting) {
         hideCssSelectors.push('yt-player-quick-action-buttons :is(like-button-view-model, dislike-button-view-model)')
       }
-      if (config.playerRemoveControlsBg) {
-        cssRules.push(`
-          .ytp-delhi-modern {
-            .ytp-left-controls > :is(button, a, .ytp-volume-area),
-            .ytp-time-wrapper,
-            .ytp-chapter-title,
-            .ytp-right-controls {
-              background: transparent !important;
-            }
-          }
-          .ytp-big-mode .ytp-fullscreen-grid-expand-button {
-            background: transparent !important;
-          }
-          .ytPlayerQuickActionButtonsHost {
-            background: transparent !important;
-          }
-        `)
-      }
       if (config.removePink) {
         cssRules.push(`
           .ytp-play-progress,
@@ -2125,13 +2723,44 @@ const configureCss = (() => {
       }
       if (config.restoreMiniplayerButton) {
         hideCssSelectors.push('ytd-watch-flexy[fullscreen] #cpfyt-miniplayer-button')
+        cssRules.push(`
+          #cpfyt-miniplayer-button {
+            display: inline-block !important;
+            anchor-name: --cpfyt-miniplayer-anchor;
+          }
+          #cpfyt-miniplayer-button + .ytp-tooltip {
+            display: block !important;
+            position: fixed;
+            position-anchor: --cpfyt-miniplayer-anchor;
+            bottom: anchor(top);
+            left: anchor(center);
+            translate: -50% -14px;
+            opacity: 0;
+          }
+          #cpfyt-miniplayer-button + .ytp-tooltip .ytp-tooltip-text {
+            font-size: 13px;
+            white-space: pre;
+          }
+          .ytp-delhi-modern #cpfyt-miniplayer-button + .ytp-tooltip {
+            translate: -50% -22px;
+          }
+          #cpfyt-miniplayer-button:hover + .ytp-tooltip {
+            opacity: 1;
+          }
+        `)
       } else {
         hideCssSelectors.push('#cpfyt-miniplayer-button')
       }
       if (config.revertGiantRelated) {
         cssRules.push(`
+          /* Reduce width of secondary sidebar (from 550px when 2 column grid is being used) */
+          ytd-watch-flexy #secondary {
+            --ytd-watch-flexy-sidebar-width: 402px;
+            --ytd-watch-flexy-sidebar-min-width: 300px;
+            max-width: var(--ytd-watch-flexy-sidebar-width);
+          }
           #secondary #related {
-            /* .yt-lockup-view-model--horizontal styles */
+            /* Apply --horizontal styles when --vertical is used */
             .yt-lockup-view-model--vertical {
               -moz-box-orient:vertical;
               -moz-box-direction:normal;
@@ -2167,10 +2796,24 @@ const configureCss = (() => {
               display:none;
             }
 
-            /* Fix display of images */
+            /* Fix --vertical version images */
             .yt-lockup-view-model--vertical .yt-lockup-view-model__content-image {
-              width:160px;
+              width:168px;
               padding-bottom:0;
+            }
+
+            /* Constrain width of wide % width version */
+            .yt-lockup-view-model__content-image {
+              max-width:168px;
+            }
+
+            /* When 2 column grid is being used, force it to be 1 column */
+            ytd-watch-next-secondary-results-renderer[use-dynamic-secondary-columns]:not(:has(ytd-item-section-renderer)) #items.ytd-watch-next-secondary-results-renderer,
+            ytd-watch-next-secondary-results-renderer[use-dynamic-secondary-columns] #contents.ytd-item-section-renderer {
+              grid-template-columns:1fr;
+            }
+            ytd-watch-next-secondary-results-renderer[use-dynamic-secondary-columns] .lockup.ytd-watch-next-secondary-results-renderer {
+              margin-bottom:0;
             }
           }
         `)
@@ -2202,6 +2845,7 @@ const configureCss = (() => {
             max-width: ${{
               medium: 420,
               small: 360,
+              xsmall: 280,
             }[config.searchThumbnailSize]}px !important;
           }
         `)
@@ -2377,6 +3021,117 @@ const configureCss = (() => {
     }
   }
 })()
+
+//#region Grid CSS
+const configureGridCss = (() => {
+  /** @type {HTMLStyleElement} */
+  let $style
+  /** @type {boolean} */
+  let fixingGhostCards
+  return function configureGridCss() {
+    if (!config.enabled) {
+      log('removing grid stylesheet')
+      $style?.remove()
+      $style = null
+      effectiveGridItemsPerRow = null
+      effectiveGridMode = null
+      return
+    }
+
+    /** @type {typeof effectiveGridItemsPerRow} */
+    let gridItemsPerRow
+    /** @type {typeof effectiveGridMode} */
+    let gridMode
+
+    if (config.minimumGridItemsPerRow == 'auto') {
+      gridMode = 'auto'
+      if (lastElementsPerRow) {
+        gridItemsPerRow = lastElementsPerRow
+      }
+    }
+    else if (!config.minimumGridItemsPerRow.startsWith('+')) {
+      gridMode = 'minimum'
+      gridItemsPerRow = Number(config.minimumGridItemsPerRow)
+    }
+    else {
+      gridMode = 'relative'
+      if (lastElementsPerRow) {
+        if (lastElementsPerRow > 2) {
+          gridItemsPerRow = lastElementsPerRow + Number(config.minimumGridItemsPerRow)
+        } else {
+          gridItemsPerRow = lastElementsPerRow + 1
+        }
+      }
+    }
+
+    if (gridItemsPerRow == effectiveGridItemsPerRow &&
+        gridMode == effectiveGridMode &&
+        config.fixGhostCards == fixingGhostCards) {
+      return
+    }
+
+    effectiveGridItemsPerRow = gridItemsPerRow
+    effectiveGridMode = gridMode
+    fixingGhostCards = config.fixGhostCards
+
+    if (gridMode == 'auto')
+      log(`gridItemsPerRow: auto`)
+    else if (gridMode == 'minimum')
+      log(`gridItemsPerRow: minimum of ${gridItemsPerRow}`)
+    else if (gridMode == 'relative' && lastElementsPerRow)
+      log(`gridItemsPerRow: ${config.minimumGridItemsPerRow} (${lastElementsPerRow} → ${gridItemsPerRow})`)
+
+    let cssRules = []
+
+    if (gridMode != 'auto' && gridItemsPerRow) {
+      let ytOverMinimum = gridMode == 'minimum' && lastElementsPerRow && lastElementsPerRow > gridItemsPerRow
+      if (!ytOverMinimum) {
+        cssRules.push(`
+          ytd-browse:is([page-subtype="home"], [page-subtype="subscriptions"]) ytd-rich-grid-renderer {
+            --ytd-rich-grid-items-per-row: ${gridItemsPerRow} !important;
+          }
+        `)
+      }
+      if (!config.hideSuggestedSections) {
+        if (!ytOverMinimum) {
+          cssRules.push(`
+            ytd-browse[page-subtype="subscriptions"] ytd-rich-shelf-renderer:not([is-shorts]) {
+              --ytd-rich-grid-items-per-row: ${gridItemsPerRow} !important;
+            }
+          `)
+        }
+        // Show "Most relevant" thumbnails beyond the ones YouTube thinks should be visible
+        cssRules.push(`
+          ytd-browse[page-subtype="subscriptions"] ytd-rich-shelf-renderer:not([is-shorts]) ytd-rich-item-renderer:nth-child(-n+${gridItemsPerRow}) {
+            display: block !important;
+          }
+        `)
+      }
+    }
+
+    if (gridItemsPerRow) {
+      let gridPagesNeedingGhostCardFix = getGridPagesNeedingGhostCardFix()
+      if (config.fixGhostCards && gridPagesNeedingGhostCardFix.length > 0) {
+        cssRules.push(`
+          ytd-browse:is(${gridPagesNeedingGhostCardFix.map(page => `[page-subtype="${page}"]`).join(', ')}) {
+            /* Only show one row's worth of ghost cards */
+            .ghost-card:nth-child(n+${gridItemsPerRow + 1}) {
+              display: none;
+            }
+          }
+        `)
+      }
+    }
+
+    let css = cssRules.map(dedent).join('\n')
+    if ($style == null) {
+      $style = addStyle(css)
+    } else {
+      $style.textContent = css
+    }
+  }
+})()
+//#endregion
 //#endregion
 
 function isHomePage() {
@@ -2385,6 +3140,11 @@ function isHomePage() {
 
 function isChannelPage() {
   return URL_CHANNEL_RE.test(location.pathname)
+}
+
+function isDesktopPremium() {
+  // @ts-expect-error
+  return typeof ytInitialData == 'object' && ytInitialData?.topbar?.desktopTopbarRenderer?.logo?.topbarLogoRenderer?.iconImage?.iconType == 'YOUTUBE_PREMIUM_LOGO'
 }
 
 function isSearchPage() {
@@ -2425,7 +3185,7 @@ function allowBackgroundPlay() {
     if (!isVideoPage()) return
     let $player = document.querySelector('#movie_player')
     if (!$player) return
-    // @ts-ignore
+    // @ts-expect-error
     let playerState = $player.getPlayerState?.()
     if (!playerState || playerState < 1 || playerState == 2) return
     function activity() {
@@ -2446,14 +3206,19 @@ function allowBackgroundPlay() {
   }, true)
 }
 
-async function alwaysUseOriginalAudio(playerSelector) {
-  let $player = await getElement(playerSelector, {
-    name: `${playerSelector} (alwaysUseOriginalAudio)`,
-    stopIf: currentUrlChanges(),
-  })
+/**
+ * @param {string} playerSelector
+ * @param {HTMLElement} [$player]
+ */
+async function alwaysUseOriginalAudio(playerSelector, $player = null) {
+  if (!$player) {
+    $player = await getElement(playerSelector, {
+      name: `${playerSelector} (alwaysUseOriginalAudio)`,
+      stopIf: currentUrlChanges(),
+    })
+  }
   if (!$player) return
-
-  // @ts-ignore
+  // @ts-expect-error
   let playerState = $player.getPlayerState?.()
   if (playerState != null && playerState != 1) {
     log('alwaysUseOriginalAudio: waiting for video to start playing')
@@ -2468,7 +3233,7 @@ async function alwaysUseOriginalAudio(playerSelector) {
       $player.addEventListener('onStateChange', onStateChange)
     })
   }
-  // @ts-ignore
+  // @ts-expect-error
   let tracks = $player?.getAvailableAudioTracks?.()
   if (!tracks || tracks.length <= 1) {
     log('alwaysUseOriginalAudio: no alternative tracks available')
@@ -2492,7 +3257,7 @@ async function alwaysUseOriginalAudio(playerSelector) {
     return
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   let activeTrack = $player.getAudioTrack?.()
   if (activeTrack && activeTrack.id == originalTrack.id) {
     log('alwaysUseOriginalAudio: already using original track')
@@ -2500,16 +3265,12 @@ async function alwaysUseOriginalAudio(playerSelector) {
   }
 
   log('alwaysUseOriginalAudio: switching to original audio track', originalTrackName)
-  // @ts-ignore
+  // @ts-expect-error
   $player.setAudioTrack?.(originalTrack)
 }
 
-async function alwaysUseTheaterMode() {
-  let $player = await getElement('#movie_player', {
-    name: 'player (alwaysUseTheaterMode)',
-    stopIf: currentUrlChanges(),
-  })
-  if (!$player) return
+/**@param {HTMLElement} $player */
+function alwaysUseTheaterMode($player) {
   if (!$player.closest('#player-full-bleed-container')) {
     let $sizeButton = /** @type {HTMLButtonElement} */ ($player.querySelector('button.ytp-size-button'))
     if ($sizeButton) {
@@ -2531,6 +3292,131 @@ async function defaultPlaybackSpeed() {
   if (!$player) return
   // @ts-ignore
   $player.setPlaybackRate(parseFloat(config.defaultPlaybackSpeed))
+}
+
+function animateHidingHiddenItems(itemsToHide) {
+  function hideItem(item) {
+    item.classList.remove('cpfyt-vanishing-flip')
+    item.classList.add(Classes.HIDE_HIDDEN)
+    item.style.position = ''
+    item.style.top = ''
+    item.style.left = ''
+    item.style.width = ''
+    item.style.height = ''
+    item.style.margin = ''
+  }
+
+  let parent = itemsToHide[0].parentElement
+  let itemsToHideSet = new Set(itemsToHide)
+
+  // First
+  let initialSiblingPositions = new Map()
+  let visibleSiblings = []
+  for (let child of parent.children) {
+    if (!itemsToHideSet.has(child) && child.offsetParent != null) {
+      visibleSiblings.push(child);
+      initialSiblingPositions.set(child, child.getBoundingClientRect())
+    }
+  }
+
+  let itemGeometries = new Map()
+  let parentRect = parent.getBoundingClientRect()
+  for (let item of itemsToHide) {
+    itemGeometries.set(item, item.getBoundingClientRect())
+  }
+
+  let parentPosition = window.getComputedStyle(parent).position
+  if (parentPosition == 'static') {
+    parent.style.position = 'relative'
+  }
+  for (let item of itemsToHide) {
+    let itemRect = itemGeometries.get(item)
+    if (!itemRect) continue
+    item.style.position = 'absolute'
+    item.style.top = `${itemRect.top - parentRect.top}px`
+    item.style.left = `${itemRect.left - parentRect.left}px`
+    item.style.width = `${itemRect.width}px`
+    item.style.height = `${itemRect.height}px`
+    item.style.margin = '0'
+    item.classList.add('cpfyt-vanishing-flip')
+  }
+
+  // Force reflow
+  parent.offsetHeight
+
+  let siblingCleanupTimeout = null
+  let siblingsToAnimate = []
+  let siblingTransitionCss = `transform ${ANIMATE_HIDE_DURATION_MS}ms cubic-bezier(0.25, 0.8, 0.25, 1)`
+  requestAnimationFrame(() => {
+    // Last
+    let finalSiblingPositions = new Map()
+    let currentVisibleSiblings = []
+    for (let sibling of visibleSiblings) {
+      if (sibling.offsetParent != null) {
+        finalSiblingPositions.set(sibling, sibling.getBoundingClientRect())
+        currentVisibleSiblings.push(sibling)
+      } else {
+        initialSiblingPositions.delete(sibling)
+      }
+    }
+
+    // Invert
+    for (let sibling of currentVisibleSiblings) {
+      let initial = initialSiblingPositions.get(sibling)
+      let final = finalSiblingPositions.get(sibling)
+      if (!initial || !final) continue
+      let deltaX = initial.left - final.left
+      let deltaY = initial.top - final.top
+      if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
+        siblingsToAnimate.push({ element: sibling, deltaX, deltaY })
+        sibling.style.transition = 'none'
+        sibling.style.transform = `translate(${deltaX}px, ${deltaY}px)`
+      }
+    }
+
+    // Play
+    requestAnimationFrame(() => {
+      for (let anim of siblingsToAnimate) {
+        anim.element.style.transition = siblingTransitionCss
+        anim.element.style.transform = ''
+      }
+
+      if (siblingsToAnimate.length > 0) {
+        siblingCleanupTimeout = setTimeout(() => {
+          for (let anim of siblingsToAnimate) {
+            if (anim.element.style.transform == '' && anim.element.style.transition == siblingTransitionCss) {
+              anim.element.style.transition = ''
+            }
+          }
+          siblingCleanupTimeout = null
+        }, ANIMATE_HIDE_DURATION_MS + 50)
+      }
+    })
+  })
+
+  let itemCleanupTimeout = setTimeout(() => {
+    for (let item of itemsToHide) {
+      hideItem(item)
+    }
+    itemCleanupTimeout = null
+  }, ANIMATE_HIDE_DURATION_MS)
+
+  return function cleanup() {
+    if (itemCleanupTimeout) {
+      clearTimeout(itemCleanupTimeout)
+      for (let item of itemsToHide) {
+        hideItem(item)
+      }
+    }
+
+    if (siblingCleanupTimeout) {
+      clearTimeout(siblingCleanupTimeout)
+      for (let anim of siblingsToAnimate) {
+        anim.element.style.transition = ''
+        anim.element.style.transform = ''
+      }
+    }
+  }
 }
 
 async function disableAutoplay() {
@@ -2592,12 +3478,8 @@ async function disableAutoplay() {
   }
 }
 
-async function disableTheaterBigMode() {
-  let $player = await getElement('#movie_player', {
-    name: 'player (disableTheaterBigMode)',
-    stopIf: currentUrlChanges(),
-  })
-  if (!$player) return
+/** @param {HTMLElement} $player */
+function disableTheaterBigMode($player) {
   observeElement($player, () => {
     if ($player.classList.contains('ytp-big-mode') &&
         $player.closest('ytd-watch-flexy[role="main"][theater]:not([fullscreen])')) {
@@ -2606,7 +3488,32 @@ async function disableTheaterBigMode() {
     }
   }, {
     leading: true,
-    name: 'disableTheaterBigMode: player',
+    name: 'disableTheaterBigMode: player class',
+    observers: pageObservers,
+  }, {
+    attributes: true,
+    attributeFilter: ['class'],
+  })
+}
+
+/** @param {HTMLElement} $player */
+function hideFullScreenMoreVideos($player) {
+  observeElement($player, () => {
+    let remove = false
+    if ($player.classList.contains('ytp-fullscreen-grid-peeking')) {
+      log('playerHideFullScreenMoreVideos: removing .ytp-fullscreen-grid-peeking from player')
+      remove = true
+    }
+    if ($player.classList.contains('ytp-fullscreen-grid-active')) {
+      log('playerHideFullScreenMoreVideos: removing .ytp-fullscreen-grid-active from player')
+      remove = true
+    }
+    if (remove) {
+      $player.classList.remove('ytp-fullscreen-grid-peeking', 'ytp-fullscreen-grid-active')
+    }
+  }, {
+    leading: true,
+    name: 'playerHideFullScreenMoreVideos: player class',
     observers: pageObservers,
   }, {
     attributes: true,
@@ -2677,7 +3584,7 @@ function handleCurrentUrl() {
   }
   else if (isChannelPage()) {
     page = 'channel'
-    channelTab = location.pathname.match(URL_CHANNEL_RE)[1] || 'featured'
+    channelTab = location.pathname.match(URL_CHANNEL_TAB_RE)?.[1] ?? 'featured'
     tweakChannelPage()
   }
   // Add a current page indicator to html[cpfyt-page] when we need a CSS hook
@@ -2704,12 +3611,16 @@ function handleCurrentUrl() {
 function addDownloadTranscriptToDesktopMenu($menu) {
   if (!isVideoPage()) return
 
-  let $transcript = $lastClickedElement.closest('[target-id="engagement-panel-searchable-transcript"]')
+  let $transcript = $lastClickedElement?.closest('[target-id="engagement-panel-searchable-transcript"]')
   if (!$transcript) return
 
   if ($menu.querySelector('.cpfyt-menu-item')) return
 
   let $menuItems = $menu.querySelector('#items')
+  if (!$menuItems) {
+    warn('menu #items not found')
+    return
+  }
   $menuItems.insertAdjacentHTML('beforeend', html`
 <div class="cpfyt-menu-item" tabindex="0" style="display: none">
   <div class="cpfyt-menu-text">
@@ -2721,7 +3632,7 @@ function addDownloadTranscriptToDesktopMenu($menu) {
   function download() {
     downloadTranscript()
     // Dismiss the menu
-    // @ts-ignore
+    // @ts-expect-error
     document.querySelector('#content')?.click()
   }
   $item.addEventListener('click', download)
@@ -2737,8 +3648,12 @@ function addDownloadTranscriptToDesktopMenu($menu) {
 function handleDesktopWatchChannelMenu($menu) {
   if (!isVideoPage()) return
 
-  let $channelMenuRenderer = $lastClickedElement.closest('ytd-menu-renderer.ytd-watch-metadata')
+  let $channelMenuRenderer = $lastClickedElement?.closest('ytd-menu-renderer.ytd-watch-metadata')
   if (!$channelMenuRenderer) return
+
+  // Other menus can be displayed from the menu renderer, e.g. Save
+  let $menuItems = $menu.querySelector('#items')
+  if (!$menuItems) return
 
   let $channelLink = /** @type {HTMLAnchorElement} */ (document.querySelector('ytd-watch-flexy #channel-name a'))
   if (!$channelLink) {
@@ -2791,7 +3706,6 @@ function handleDesktopWatchChannelMenu($menu) {
       }
     }
 
-    let $menuItems = $menu.querySelector('#items')
     $menuItems.insertAdjacentHTML('beforeend', html`
 <div class="cpfyt-menu-item" tabindex="0" id="cpfyt-hide-channel-menu-item" style="display: none">
   <div class="cpfyt-menu-icon">
@@ -2833,7 +3747,7 @@ function addHideChannelToDesktopVideoMenu($menu) {
 
   if (!videoContainerElementSelector) return
 
-  let $video = /** @type {HTMLElement} */ ($lastClickedElement.closest(videoContainerElementSelector))
+  let $video = /** @type {HTMLElement} */ ($lastClickedElement?.closest(videoContainerElementSelector))
   if (!$video) return
 
   log('found clicked video')
@@ -2846,6 +3760,10 @@ function addHideChannelToDesktopVideoMenu($menu) {
     'tp-yt-paper-listbox',
     'yt-list-view-model',
   ].join(', '))
+  if (!$menuItems) {
+    warn('menu items not found')
+    return
+  }
   // Insert before last menu item, which should be Report
   $menuItems.lastElementChild.insertAdjacentHTML('beforebegin', html`
 <div class="cpfyt-menu-item" tabindex="0" id="cpfyt-hide-channel-menu-item" style="display: none">
@@ -2887,7 +3805,7 @@ async function addHideChannelToMobileVideoMenu($menu) {
   if (!(isHomePage() || isSearchPage() || isVideoPage())) return
 
   /** @type {HTMLElement} */
-  let $video = $lastClickedElement.closest('ytm-video-with-context-renderer')
+  let $video = $lastClickedElement?.closest('ytm-video-with-context-renderer')
   if (!$video) return
 
   log('found clicked video')
@@ -2896,6 +3814,8 @@ async function addHideChannelToMobileVideoMenu($menu) {
   lastClickedChannel = channel
 
   let $menuItems = $menu.querySelector($menu.id == 'menu' ? '.menu-content' : '.bottom-sheet-media-menu-item')
+  if (!$menuItems) return
+
   let hasIcon = Boolean($menuItems.querySelector('c3-icon'))
   let hideChannelMenuItemHTML = html`
     <ytm-menu-item id="cpfyt-hide-channel-menu-item">
@@ -3120,6 +4040,10 @@ async function observeDesktopRelatedVideos() {
             log('#related categories appeared')
             $canShowMoreElement = $addedNode
             $contents = $addedNode.querySelector('#contents')
+            if (!$contents) {
+              warn('#contents not found in <ytd-item-section-renderer>')
+              return
+            }
             init()
           }
         }
@@ -3198,18 +4122,34 @@ async function observeDesktopRelatedVideos() {
  */
 function observeDesktopYtLockupViewModelItemContent($gridItem, uniqueId) {
   let $content = $gridItem.querySelector(':scope > #content')
+  if (!$content) {
+    warn('#content not found in <yt-lockup-view-model>', $gridItem)
+    return
+  }
   observeElement($content, (mutations) => {
+    if (mutations.length == 0) {
+      let $lockupViewModel = $gridItem.querySelector('yt-lockup-view-model')
+      if ($lockupViewModel) {
+        requestAnimationFrame(() => manuallyHideVideo($gridItem, {hideDismissed: true}))
+      }
+      return
+    }
+
     for (let mutation of mutations) {
       for (let $addedNode of mutation.addedNodes) {
         if (!($addedNode instanceof HTMLElement)) continue
         if ($addedNode.nodeName == 'YT-LOCKUP-VIEW-MODEL') {
-          log('yt-lockup-view-model added to', uniqueId, $addedNode)
+          if (debugLogGridObservers) {
+            log('yt-lockup-view-model added to', uniqueId)
+          }
           // Let the new thumbnail finish rendering
           requestAnimationFrame(() => manuallyHideVideo($gridItem, {hideDismissed: true}))
         }
       }
     }
   }, {
+    leading: true,
+    logObserve: debugLogGridObservers,
     name: `${uniqueId} #content`,
     observers: pageObservers,
   })
@@ -3225,6 +4165,23 @@ async function observeDesktopRichGridItems(options) {
     stopIf: currentUrlChanges(),
   })
   if (!$renderer) return
+
+  observeElement($renderer, () => {
+    let elementsPerRowValue = $renderer.getAttribute('elements-per-row')
+    if (!elementsPerRowValue) return
+    let elementsPerRow = Number(elementsPerRowValue)
+    if (!Number.isNaN(elementsPerRow) && elementsPerRow != lastElementsPerRow) {
+      lastElementsPerRow = elementsPerRow
+      configureGridCss()
+    }
+  }, {
+    leading: true,
+    name: '<ytd-rich-grid-renderer> elements-per-row',
+    observers: pageObservers,
+  }, {
+    attributes: true,
+    attributeFilter: ['elements-per-row'],
+  })
 
   let $gridContents = $renderer.querySelector(':scope > #contents')
 
@@ -3247,15 +4204,106 @@ async function observeDesktopRichGridItems(options) {
     }
   }
 
-  // Process new videos as they're added
+  let fixGhostCards = config.fixGhostCards && {
+    home: !config.displayHomeGridAsList,
+    subscriptions: !config.displaySubscriptionsGridAsList,
+  }[page]
+  /** @type {HTMLElement} */
+  let $lastGhostGridClone = null
+  /** @type {HTMLElement} */
+  let $lastSpinnerClone = null
+  /** @type {WeakMap<HTMLElement, HTMLElement>} */
+  let ghostGridClones = new WeakMap()
+  /** @type {WeakMap<HTMLElement, HTMLElement>} */
+  let spinnerClones = new WeakMap()
+
+  /** @param {HTMLElement} $continuationRenderer */
+  function onContinuationRendererAdded($continuationRenderer) {
+    if ($lastGhostGridClone?.isConnected) $lastGhostGridClone.remove()
+    if ($lastSpinnerClone?.isConnected) $lastSpinnerClone.remove()
+    $lastGhostGridClone = document.createElement('div')
+    $lastGhostGridClone.className = 'cpfyt-ghost-cards'
+    let $cards = $continuationRenderer.querySelectorAll('.ghost-grid .ghost-card')
+    if ($cards.length > 0) {
+      $lastGhostGridClone.append(...$cards)
+      // Add more cards if YouTube didn't generate enough
+      if (effectiveGridItemsPerRow && effectiveGridItemsPerRow > $lastGhostGridClone.childElementCount) {
+        let extra = effectiveGridItemsPerRow - $lastGhostGridClone.childElementCount
+        log('fixGhostCards: adding', extra, `ghost card${s(extra)}`)
+        for (let i = 0; i < extra; i++) {
+          $lastGhostGridClone.append($lastGhostGridClone.lastElementChild.cloneNode(true))
+        }
+      }
+      // YouTube can remove the continuation renderer before we move ghost cards
+      if ($continuationRenderer.isConnected) {
+        $continuationRenderer.insertAdjacentElement('afterend', $lastGhostGridClone)
+        ghostGridClones.set($continuationRenderer, $lastGhostGridClone)
+      }
+    } else {
+      warn('fixGhostCards: no ghost cards found in continuation renderer')
+    }
+    let $spinner = $continuationRenderer.querySelector('tp-yt-paper-spinner')
+    if ($spinner) {
+      observeElement($spinner, (_, observer) => {
+        if (!$spinner.hasAttribute('active')) return
+        observer.disconnect()
+        if (!$continuationRenderer.isConnected) return
+        $lastSpinnerClone = document.createElement('div')
+        $lastSpinnerClone.className = 'cpfyt-grid-spinner'
+        log('fixGhostCards: moving active loading spinner')
+        $lastSpinnerClone.append($spinner.cloneNode(true))
+        $gridContents.append($lastSpinnerClone)
+        spinnerClones.set($continuationRenderer, $lastSpinnerClone)
+      }, {
+        leading: true,
+        logObserve: debugLogGridObservers,
+        logDisconnect: debugLogGridObservers,
+        name: 'fixGhostCards: loading spinner',
+        observers: pageObservers,
+      }, {
+        attributes: true,
+        attributeFilter: ['active'],
+      })
+    } else {
+      warn('fixGhostCards: loading spinner not found in ghost cards')
+    }
+  }
+
+  /** @param {HTMLElement} $continuationRenderer */
+  function onContinuationRendererRemoved($continuationRenderer) {
+    let $ghostGridClone = ghostGridClones.get($continuationRenderer)
+    if ($ghostGridClone) {
+      ghostGridClones.delete($continuationRenderer)
+      if ($ghostGridClone.isConnected) $ghostGridClone.remove()
+      if ($ghostGridClone === $lastGhostGridClone) $lastGhostGridClone = null
+    }
+    let $spinnerClone = spinnerClones.get($continuationRenderer)
+    if ($spinnerClone) {
+      spinnerClones.delete($continuationRenderer)
+      if ($spinnerClone.isConnected) $spinnerClone.remove()
+      if ($spinnerClone === $lastSpinnerClone) $lastSpinnerClone = null
+    }
+  }
+
   observeElement($gridContents, (mutations) => {
     let videosAdded = 0
     for (let mutation of mutations) {
+      if (fixGhostCards) {
+        for (let $removedNode of mutation.removedNodes) {
+          if (!($removedNode instanceof HTMLElement)) continue
+          if ($removedNode.nodeName == 'YTD-CONTINUATION-ITEM-RENDERER') {
+            onContinuationRendererRemoved($removedNode)
+          }
+        }
+      }
       for (let $addedNode of mutation.addedNodes) {
         if (!($addedNode instanceof HTMLElement)) continue
         if ($addedNode.nodeName == 'YTD-RICH-ITEM-RENDERER') {
           processGridItem($addedNode, `grid item ${++itemCount}`)
           videosAdded++
+        }
+        if (fixGhostCards && $addedNode.nodeName == 'YTD-CONTINUATION-ITEM-RENDERER') {
+          onContinuationRendererAdded($addedNode)
         }
       }
     }
@@ -3267,19 +4315,34 @@ async function observeDesktopRichGridItems(options) {
     observers: pageObservers,
   })
 
+  if (fixGhostCards) {
+    pageObservers.set('grid loading placeholder clones', {
+      disconnect() {
+        if ($lastGhostGridClone?.isConnected) $lastGhostGridClone.remove()
+        if ($lastSpinnerClone?.isConnected) $lastSpinnerClone.remove()
+      }
+    })
+  }
+
   processAllVideos()
 }
 
 /** @param {HTMLElement} $dropdown */
-function onDesktopMenuAppeared($dropdown) {
+async function onDesktopMenuAppeared($dropdown) {
   log('menu appeared', $dropdown)
+
 
   // YouTube currently has 2 menu components: <tp-yt-paper-listbox> and <yt-list-item-view-model>
   let $menu = $dropdown.querySelector('tp-yt-paper-listbox, yt-list-item-view-model')
   if (!$menu) {
-    warn('menu not found in', $dropdown)
-    return
+    await frame()
+    $menu = $dropdown.querySelector('tp-yt-paper-listbox, yt-list-item-view-model')
+    if (!$menu) {
+      warn('menu not found in', $dropdown)
+      return
+    }
   }
+
   let menuConfig = MenuConfigs[$menu.tagName]
 
   if (config.hideShareThanksClip) {
@@ -3293,7 +4356,7 @@ function onDesktopMenuAppeared($dropdown) {
         // Separator on the Download item is <tp-yt-paper-listbox> menu-specific
         if ($menuItem.hasAttribute('has-separator')) {
           let $newSeparatorItem = $menuItem.previousElementSibling
-          if (config.hidePremiumUpsells && $newSeparatorItem.tagName == 'YTD-MENU-SERVICE-ITEM-DOWNLOAD-RENDERER') {
+          if (config.hidePremiumUpsells && !isDesktopPremium() && $newSeparatorItem.tagName == 'YTD-MENU-SERVICE-ITEM-DOWNLOAD-RENDERER') {
             $newSeparatorItem = $newSeparatorItem.previousElementSibling
           }
           log('hideShareThanksClip: moving has-separator to', $newSeparatorItem)
@@ -3325,6 +4388,10 @@ function observeDesktopContextMenu($popupContainer) {
 
   function addTakeShapshotMenuItem() {
     let $insertAfter = $contextMenu.querySelector('.ytp-menuitem:last-child')
+    if (!$insertAfter) {
+      warn('addTakeSnapshot: menu item to insert after not found')
+      return
+    }
     $insertAfter.insertAdjacentHTML('afterend', html`
 <div id="cpfyt-snaphot-menu-item" class="ytp-menuitem" role="menuitem" tabindex="0">
   <div class="ytp-menuitem-icon">
@@ -3402,6 +4469,8 @@ async function observePopups() {
             onDialogClosed()
             onDialogClosed = null
           }
+        } else {
+          log('dialog opened')
         }
       }, {
         name: '<tp-yt-paper-dialog> (for [aria-hidden] being added)',
@@ -3429,6 +4498,39 @@ async function observePopups() {
       })
     }
 
+    function observeNotificationRenderer($notificationRenderer) {
+      observeElement($notificationRenderer, (_, observer)  => {
+        let $toast = $notificationRenderer.querySelector('tp-yt-paper-toast')
+        if (!$toast) return
+        observer.disconnect()
+        observeElement($toast, () => {
+          if ($toast.getAttribute('aria-hidden') == 'true') return
+          if (!$toast.querySelector('a[href^="https://support.google.com/youtube/answer/3037019"]')) return
+          $toast.classList.add('ExperiencingInterruptions')
+          if (config.hideExperiencingInterruptions) {
+            log('hideExperiencingInterruptions: hiding toast')
+          } else {
+            let $text = $toast.querySelector('#text-container #text')
+            if ($text) {
+              log('hideExperiencingInterruptions: making message more accurate')
+              $text.textContent = getString('ADS_BLOCKED')
+            }
+          }
+        }, {
+          name: '<tp-yt-paper-toast> (for "Experiencing interruptions?" message)',
+          observers: globalObservers,
+        },{
+          attributes: true,
+          attributeFilter: ['aria-hidden'] ,
+          childList: true,
+        })
+      }, {
+        leading: true,
+        name: '<yt-notification-action-renderer> (for <tp-yt-paper-toast> being added)',
+        observers: globalObservers,
+      })
+    }
+
     // Desktop dialogs and menus appear in <ytd-popup-container>. Once created,
     // the same elements are reused.
     let $popupContainer = await getElement('ytd-popup-container', {name: 'popup container'})
@@ -3441,6 +4543,8 @@ async function observePopups() {
         observeDropdown($dropdown)
       }
     }
+    let $notificationRenderer = $popupContainer.querySelector('yt-notification-action-renderer')
+    if ($notificationRenderer) observeNotificationRenderer($notificationRenderer)
 
     observeElement($popupContainer, (mutations) => {
       for (let mutation of mutations) {
@@ -3453,11 +4557,14 @@ async function observePopups() {
             case 'TP-YT-PAPER-DIALOG':
               observeDialog($el)
               break
+            case 'YT-NOTIFICATION-ACTION-RENDERER':
+              observeNotificationRenderer($el)
+              break
           }
         }
       }
     }, {
-      name: '<ytd-popup-container> (for <tp-yt-iron-dropdown> and <tp-yt-paper-dialog> being added)',
+      name: '<ytd-popup-container> (for popup elements being added)',
       observers: globalObservers,
     })
 
@@ -3590,6 +4697,11 @@ async function observeSearchResultSections(options) {
    */
   function processSection($section, sectionNum, isInitialSection = false) {
     let $contents = /** @type {HTMLElement} */ ($section.querySelector(sectionContentsSelector))
+    if (!$contents) {
+      warn(sectionContentsSelector, 'not found in search results section', sectionNum, $section)
+      return
+    }
+
     let itemCount = 0
     let suggestedSectionCount = 0
     /** @type {Map<string, import("./types").Disconnectable>} */
@@ -3624,6 +4736,10 @@ async function observeSearchResultSections(options) {
     function processSuggestedSection($suggestedSection) {
       let uniqueId = `section ${sectionNum} suggested section ${++suggestedSectionCount}`
       let $items = $suggestedSection.querySelector('#items')
+      if (!$items) {
+        warn('#items not found in suggested section')
+        return
+      }
       for (let $video of $items.children) {
         if ($video.nodeName == videoNodeName) {
           manuallyHideVideo($video)
@@ -3757,6 +4873,7 @@ async function observeTitle() {
  * When dismissed, display a timer and hide the dismissed video when it elapses.
  */
 function observeVideoHiddenState() {
+  let animateHiding
   /** @type {Element} */
   let $elementToHide
   /** @type {HTMLElement} */
@@ -3765,7 +4882,7 @@ function observeVideoHiddenState() {
   let $tellUsWhyButton
   /** @type {HTMLButtonElement} */
   let $undoButton
-  /** @type {{$container: Element, small?: boolean}} */
+  /** @type {{$container: Element}} */
   let pieConfig
   let startTime
   let timeout
@@ -3796,7 +4913,6 @@ function observeVideoHiddenState() {
     if (delay) $pie.style.setProperty('--cpfyt-pie-delay', `${delay}ms`)
     if (direction) $pie.style.setProperty('--cpfyt-pie-direction', direction)
     if (duration) $pie.style.setProperty('--cpfyt-pie-duration', `${duration}ms`)
-    if (pieConfig.small) $pie.style.setProperty('--cpfyt-pie-fontSize', '100%')
     $pie.addEventListener('click', cleanup)
     pieConfig.$container?.append($pie)
   }
@@ -3807,8 +4923,8 @@ function observeVideoHiddenState() {
     // Rapidly unwind the pie timer from its current time
     displayPie({
       direction: 'reverse',
-      delay: Math.round((elapsedTime - undoHideDelayMs) / 4),
-      duration: undoHideDelayMs / 4,
+      delay: Math.round((elapsedTime - UNDO_HIDE_DELAY_MS) / 4),
+      duration: UNDO_HIDE_DELAY_MS / 4,
     })
     // Restart the timer when the Tell us why dialog is closed
     onDialogClosed = () => {
@@ -3818,6 +4934,7 @@ function observeVideoHiddenState() {
   }
 
   function setup() {
+    animateHiding = desktop && config.animateHiding && hideAnimationController != null
     $undoButton?.addEventListener('click', cleanup)
     $tellUsWhyButton?.addEventListener('click', onTellUsWhyClick)
     startTimer()
@@ -3826,19 +4943,35 @@ function observeVideoHiddenState() {
 
   function startTimer() {
     startTime = Date.now()
+    if (animateHiding) {
+      hideAnimationController?.enqueue($elementToHide)
+    }
     timeout = setTimeout(() => {
-      $elementToHide?.classList.add(Classes.HIDE_HIDDEN)
+      timeout = null
       cleanup()
-      // Remove the class if the Undo button is clicked later, e.g. if
-      // this feature is disabled after hiding a video.
-      $undoButton.addEventListener('click', () => {
+      if (animateHiding && hideAnimationController) {
+        hideAnimationController.expire()
+      } else {
+        $elementToHide?.classList.add(Classes.HIDE_HIDDEN)
+      }
+      $undoButton?.addEventListener('click', () => {
+        // Don't hide the video if Undo is clicked after its timer expires but
+        // before it's hidden (due to other videos being hidden).
+        hideAnimationController?.remove($elementToHide)
+        // Remove the class if Undo is clicked later, e.g. if this feature is
+        // disabled after hiding a video.
         $elementToHide?.classList.remove(Classes.HIDE_HIDDEN)
       })
-    }, undoHideDelayMs)
+    }, UNDO_HIDE_DELAY_MS)
   }
 
   function stopTimer() {
-    clearTimeout(timeout)
+    if (timeout) {
+      if (animateHiding) {
+        hideAnimationController?.dequeue($elementToHide)
+      }
+      clearTimeout(timeout)
+    }
   }
 
   if (desktop) {
@@ -3861,10 +4994,9 @@ function observeVideoHiddenState() {
       let $buttons = $actions.querySelectorAll('button')
       $undoButton = $buttons[0]
       $tellUsWhyButton = $buttons[1]
-      // Display a small pie timer after "Video removed" in yt-lockup-view-model
+      // Display a small pie timer after "Video removed"
       pieConfig = {
-        $container: $actions.querySelector('.ytNotificationMultiActionRendererTextContainer') || $actions,
-        small: Boolean($ytLockupDismissedContent),
+        $container: $actions.querySelector('.ytNotificationMultiActionRendererTextContainer, #text') || $actions,
       }
       setup()
     }, {
@@ -3904,7 +5036,9 @@ function observeVideoHiddenState() {
         $elementToHide = $video.closest('ytm-item-section-renderer')
       }
       $undoButton = $dismissedContent.querySelector('button')
-      pieConfig = {$container: $dismissedContent.firstElementChild}
+      pieConfig = {
+        $container: $dismissedContent.querySelector('ytm-notification-multi-action-renderer .notification-multi-action-text-wrapper') || $dismissedContent.firstElementChild,
+      }
       setup()
     }, {
       name: `context menu video (hideHiddenVideos)`,
@@ -3963,11 +5097,11 @@ async function observeMobileVideoList(options) {
 function onDocumentClick(e) {
   $lastClickedElement = /** @type {HTMLElement} */ (e.target)
   if (desktop && loggedIn && (config.disableHomeFeed || config.redirectLogoToSubscriptions)) {
-    let $logoLink = $lastClickedElement.closest('a#logo')
+    let $logoLink = $lastClickedElement?.closest('a#logo')
     if ($logoLink) {
-      // @ts-ignore
+      // @ts-expect-error
       let browseEndpoint = $logoLink.data?.browseEndpoint
-      // @ts-ignore
+      // @ts-expect-error
       let webCommandMetadata = $logoLink.data?.commandMetadata?.webCommandMetadata
       if (browseEndpoint && webCommandMetadata) {
         log('redirecting YouTube logo click to Subscriptions')
@@ -3977,9 +5111,9 @@ function onDocumentClick(e) {
     }
   }
   if (desktop && config.redirectShorts) {
-    let $shortsLink = /** @type {HTMLAnchorElement} */ ($lastClickedElement.closest('a[href^="/shorts/'))
+    let $shortsLink = /** @type {HTMLAnchorElement} */ ($lastClickedElement?.closest('a[href^="/shorts/'))
     if ($shortsLink) {
-      // @ts-ignore
+      // @ts-expect-error
       let webCommandMetadata = $shortsLink._data?.commandMetadata?.webCommandMetadata
       if (webCommandMetadata) {
         log('redirecting Shorts video click to normal player')
@@ -3994,19 +5128,27 @@ function onDocumentClick(e) {
 function onMobileMenuAppeared($menu) {
   log('menu appeared')
 
-  if (config.hideOpenApp) {
+  if (config.hideOpenApp || config.hideShareThanksClip) {
     let menuItems = $menu.querySelectorAll('ytm-menu-item')
     for (let $menuItem of menuItems) {
       let itemText = $menuItem.textContent
-      if (itemText == getYtString('OPEN_APP')) {
+      if (config.hideOpenApp && itemText == getYtString('OPEN_APP')) {
         log('tagging Open App menu item by text')
         $menuItem.classList.add(Classes.HIDE_OPEN_APP)
-        break
-      } else {
+      }
+      else if (config.hideShareThanksClip && itemText == getString('SHARE')) {
+        log('tagging Share menu item by text')
+        $menuItem.classList.add(Classes.HIDE_SHARE_THANKS_CLIP)
+      }
+      else {
         requestAnimationFrame(() => {
-          if ($menuItem.querySelector('path[d="M19 5H8a1 1 0 000 2h7.586L5.293 17.293a1 1 0 101.414 1.414L17 8.414V16a1 1 0 002 0V5Z"]')) {
+          if (config.hideOpenApp && $menuItem.querySelector('path[d="M19 5H8a1 1 0 000 2h7.586L5.293 17.293a1 1 0 101.414 1.414L17 8.414V16a1 1 0 002 0V5Z"]')) {
             log('tagging Open App menu item by icon')
             $menuItem.classList.add(Classes.HIDE_OPEN_APP)
+          }
+          else if (config.hideShareThanksClip && $menuItem.querySelector('path[d="M10 3.158V7.51c-5.428.223-8.27 3.75-8.875 11.199-.04.487-.07.975-.09 1.464l-.014.395c-.014.473.578.684.88.32.302-.368.61-.73.925-1.086l.244-.273c1.79-1.967 3-2.677 4.93-2.917a18.011 18.011 0 012-.112v4.346a1 1 0 001.646.763l9.805-8.297 1.55-1.31-1.55-1.31-9.805-8.297A1 1 0 0010 3.158Zm2 6.27v.002-4.116l7.904 6.688L12 18.689v-4.212l-2.023.024c-1.935.022-3.587.17-5.197 1.024a9 9 0 00-1.348.893c.355-1.947.916-3.39 1.63-4.425 1.062-1.541 2.607-2.385 5.02-2.485L12 9.428Z"]')) {
+            log('tagging Share menu item by icon')
+            $menuItem.classList.add(Classes.HIDE_SHARE_THANKS_CLIP)
           }
         })
       }
@@ -4036,7 +5178,9 @@ function hideWatched($video) {
   let hide = false
   if ($progressBar) {
     let progress = parseInt(/** @type {HTMLElement} */ ($progressBar).style.width)
-    hide = progress >= Number(config.hideWatchedThreshold)
+    if (!Number.isNaN(progress)) {
+      hide = progress >= Number(config.hideWatchedThreshold)
+    }
   }
   $video.classList.toggle(Classes.HIDE_WATCHED, hide)
   return hide
@@ -4097,9 +5241,24 @@ function manuallyHideVideo($video, {hideDismissed = false} = {}) {
   if (mobile && config.hideCollaborations && isSubscriptionsPage()) {
     $video.classList.toggle(
       Classes.HIDE_COLLABORATIONS,
-      // @ts-ignore
+      // @ts-expect-error
       $video.querySelector('ytm-video-with-context-renderer')?.data?.shortBylineText?.runs?.[0]?.navigationEndpoint?.showSheetCommand?.panelLoadingStrategy?.inlineContent?.sheetViewModel?.header?.panelHeaderViewModel?.title?.content == getString('COLLABORATORS')
     )
+  }
+
+  if (config.hideLowViews && isVideoPage()) {
+    let hide = false
+    let $views
+    if (desktop) {
+      $views = $video.querySelector('.yt-content-metadata-view-model__metadata-row:nth-of-type(2) .yt-content-metadata-view-model__metadata-text')
+    }
+    if (mobile) {
+      $views = $video.querySelector('ytm-badge-and-byline-renderer [role="text"][aria-label]')
+    }
+    if ($views) {
+      hide = Boolean($views.textContent.match(getString('LOW_VIEWS_RE')))
+    }
+    $video.classList.toggle(Classes.HIDE_LOW_VIEWS, hide)
   }
 }
 
@@ -4130,21 +5289,32 @@ async function restoreMiniplayerButton() {
   })
   if (!$sizeButton) return
 
+  let supportsAnchorPositioning = 'anchorName' in document.documentElement.style
   let style = $sizeButton.parentElement.classList.contains('ytp-right-controls-right') ? 'new' : 'old'
   log('restoreMiniplayerButton:', style, 'style')
   $sizeButton.insertAdjacentHTML('beforebegin', html`
-<button id="cpfyt-miniplayer-button" class="ytp-button" title="(i)" aria-keyshortcuts="i">
+<button id="cpfyt-miniplayer-button" class="ytp-button" style="display: none" aria-keyshortcuts="i"${!supportsAnchorPositioning ? ` title="${getString('MINIPLAYER')} (i)"` : ''}>
   ${style == 'new' ? `
     <svg fill="none" height="24" viewBox="0 0 24 24" width="24">
       <path d="${Svgs.MINIPLAYER_NEW_PATH}" fill="white"></path>
     </svg>
   ` : `
     <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
-      <use xlink:href="#cpfty-id-1" class="ytp-svg-shadow"></use>
-      <path id="cpfty-id-1" d="${Svgs.MINIPLAYER_OLD_PATH}" fill="#fff" fill-rule="evenodd"></path>
+      <use xlink:href="#cpfyt-id-1" class="ytp-svg-shadow"></use>
+      <path id="cpfyt-id-1" d="${Svgs.MINIPLAYER_OLD_PATH}" fill="#fff" fill-rule="evenodd"></path>
     </svg>
   `}
 </button>
+${supportsAnchorPositioning ? `
+<div class="ytp-tooltip ytp-bottom" style="display: none">
+  <div class="ytp-tooltip-text-wrapper" aria-hidden="true">
+    <div class="ytp-tooltip-bottom-text${style == 'old' ? ' ytp-tooltip-text-no-title' : ''}">
+      <span class="ytp-tooltip-text">${getString('MINIPLAYER')}${style == 'old' ? ' (i)' : ''}</span>
+      ${style == 'new' ? '<div class="ytp-tooltip-keyboard-shortcut">I</div>' : ''}
+    </div>
+  </div>
+</div>
+` : ''}
   `)
   document.querySelector('#cpfyt-miniplayer-button')?.addEventListener('click', (e) => {
     e.preventDefault()
@@ -4262,12 +5432,7 @@ async function tweakHomePage() {
     redirectFromHome()
     return
   }
-  if (
-    // Videos need to be manually hidden
-    !config.hideWatched && !config.hideStreamed && !config.hideChannels &&
-    // Dismissed videos need to be manually hidden when switching categories
-    (mobile || !config.hideHiddenVideos)
-  ) return
+  hideAnimationController = createHideAnimationController()
   if (desktop) {
     observeDesktopRichGridItems({page: 'home'})
   }
@@ -4299,17 +5464,26 @@ async function tweakChannelPage() {
         timeout: 2000,
       })
     )
-    if ($channelTrailer) {
-      function pauseTrailer() {
-        log(`pauseChannelTrailers: pausing channel trailer`, {readyState: $channelTrailer.readyState})
-        $channelTrailer.pause()
+    if (!$channelTrailer) return
+
+    let timeoutId
+    function pauseTrailer() {
+      log(`pauseChannelTrailers: pausing channel trailer`, {readyState: $channelTrailer.readyState})
+      $channelTrailer.pause()
+      if (timeoutId) {
+        clearTimeout(timeoutId)
       }
-      // Prevent the next play attempt if the trailer hasn't started yet
-      if ($channelTrailer.paused && $channelTrailer.readyState == 0) {
-        $channelTrailer.addEventListener('play', pauseTrailer, {once: true})
-      } else {
-        pauseTrailer()
-      }
+    }
+
+    // Prevent the next play attempt if the trailer hasn't started yet
+    if ($channelTrailer.paused && $channelTrailer.readyState == 0) {
+      $channelTrailer.addEventListener('play', pauseTrailer, {once: true})
+      timeoutId = setTimeout(() => {
+        log("pauseChannelTrailers: trailer didn't start playing after 1 second")
+        $channelTrailer.removeEventListener('play', pauseTrailer)
+      }, 1000)
+    } else {
+      pauseTrailer()
     }
   }
 }
@@ -4371,14 +5545,14 @@ async function tweakShortsPage() {
 
     setTimeout(() => {
       log('stopShortsLooping: turning looping off')
-      // @ts-ignore
+      // @ts-expect-error
       $player.setLoopVideo?.(false)
     }, 500)
     function onStateChange(playerState) {
       if (playerState == 1) {
         setTimeout(() => {
           log('stopShortsLooping: turning looping off')
-          // @ts-ignore
+          // @ts-expect-error
           $player.setLoopVideo?.(false)
         }, 500)
       }
@@ -4393,7 +5567,7 @@ async function tweakShortsPage() {
 }
 
 async function tweakSubscriptionsPage() {
-  if (!config.hideWatched && !config.hideStreamed) return
+  hideAnimationController = createHideAnimationController()
   if (desktop) {
     observeDesktopRichGridItems({page: 'subscriptions'})
   }
@@ -4414,41 +5588,52 @@ async function tweakVideoPage() {
   if (config.defaultPlaybackSpeed) {
     defaultPlaybackSpeed()
   }
-  if (desktop && config.alwaysUseTheaterMode) {
-    alwaysUseTheaterMode()
-  }
-  if (desktop && config.alwaysUseOriginalAudio) {
-    alwaysUseOriginalAudio('#movie_player')
-  }
-  if (desktop && config.disableTheaterBigMode) {
-    disableTheaterBigMode()
-  }
-  if (desktop && config.hideChannels && !config.hideEndVideos && config.hiddenChannels.length > 0) {
-    observeDesktopEndscreenVideos()
-  }
-  if (desktop && config.restoreMiniplayerButton) {
-    restoreMiniplayerButton()
-  }
-
-  if (!config.hideWatched && !config.hideStreamed && !config.hideChannels) return
-
   if (desktop) {
-    observeDesktopRelatedVideos()
-  }
-  if (mobile) {
-    // If the video changes on mobile, related videos are rendered from scratch
-    observeMobileVideoList({
-      name: 'related <lazy-list>',
-      selector: 'ytm-item-section-renderer[section-identifier="related-items"] > lazy-list',
-      page: 'related',
-      // <ytm-compact-autoplay-renderer> displays as a large item on bigger mobile screens
-      videoElements: new Set(['ytm-video-with-context-renderer', 'ytm-compact-autoplay-renderer']),
+    run(async () => {
+      let $player = await getElement('#movie_player', {
+        name: 'player (tweakVideoPage)',
+        stopIf: currentUrlChanges(),
+      })
+      if (!$player) return
+      if (config.alwaysUseTheaterMode) {
+        alwaysUseTheaterMode($player)
+      }
+      if (config.alwaysUseOriginalAudio) {
+        alwaysUseOriginalAudio('#movie_player', $player)
+      }
+      if (config.disableTheaterBigMode) {
+        disableTheaterBigMode($player)
+      }
+      if (config.playerHideFullScreenMoreVideos) {
+        hideFullScreenMoreVideos($player)
+      }
     })
+    if (config.hideChannels && !config.hideEndVideos && config.hiddenChannels.length > 0) {
+      observeDesktopEndscreenVideos()
+    }
+    if (config.restoreMiniplayerButton) {
+      restoreMiniplayerButton()
+    }
+  }
+  if (config.hideWatched || config.hideStreamed || config.hideChannels || config.hideLowViews) {
+    if (desktop) {
+      observeDesktopRelatedVideos()
+    }
+    if (mobile) {
+      // If the video changes on mobile, related videos are rendered from scratch
+      observeMobileVideoList({
+        name: 'related <lazy-list>',
+        selector: 'ytm-item-section-renderer[section-identifier="related-items"] > lazy-list',
+        page: 'related',
+        // <ytm-compact-autoplay-renderer> displays as a large item on bigger mobile screens
+        videoElements: new Set(['ytm-video-with-context-renderer', 'ytm-compact-autoplay-renderer']),
+      })
+    }
   }
 }
 
 /**
- * Wait for video overlays with watch progress when they're loazed lazily.
+ * Wait for video overlays with watch progress when they're loaded lazily.
  * @param {Element} $video
  * @param {string} uniqueId
  */
@@ -4498,11 +5683,20 @@ function blockAds() {
     return entry.command?.reelWatchEndpoint?.adClientParams?.isAd != true
   }
 
-  function processPlayerResponse(data) {
+  function patchPlayerResponse(playerResponse) {
+    delete playerResponse.adPlacements
+    delete playerResponse.adSlots
+    delete playerResponse.playerAds
+  }
+
+  function processPlayerResponse(data, source) {
     if (data.videoDetails) {
-      delete data.adPlacements
-      delete data.adSlots
-      delete data.playerAds
+      patchPlayerResponse(data)
+      log(`blockAds: patched /player response format (${source})`)
+    }
+    else if (Array.isArray(data) && data[0]?.playerResponse?.videoDetails) {
+      patchPlayerResponse(data[0].playerResponse)
+      log(`blockAds: patched /get_watch response format (${source})`)
     }
   }
 
@@ -4522,7 +5716,7 @@ function blockAds() {
     if (
       (config && !(config.enabled && config.blockAds)) ||
       !(request instanceof Request) ||
-      !url || !url.includes('/player') && !url.includes('/reel_watch_sequence') ||
+      !url || !url.includes('/player') && !url.includes('/get_watch') && !url.includes('/reel_watch_sequence') ||
       // Ignore adblock detection requests with data: URL payloads
       !Request_clone.call(request).url.startsWith('https://')
     ) {
@@ -4533,15 +5727,20 @@ function blockAds() {
       return Response_clone.call(response).text().then(responseText => {
         try {
           let data = JSON.parse(responseText)
-          if (url.includes('/player')) {
-            processPlayerResponse(data)
+          if (url.includes('/player') || url.includes('/get_watch')) {
+            log('blockAds: patching', url, 'response')
+            processPlayerResponse(data, 'fetch')
           }
           else if (url.includes('/reel_watch_sequence')) {
             processReelWatchSequenceResponse(data)
           }
-          return new Response(JSON.stringify(data))
+          return new Response(JSON.stringify(data), {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
+          })
         } catch (error) {
-          warn('blockAds: error parsing', new URL(url).pathname, 'response:', error, responseText)
+          warn('blockAds: error patching', url, 'fetch response:', error, responseText)
         }
         return response
       })
@@ -4553,7 +5752,7 @@ function blockAds() {
       set(data) {
         ytInitialPlayerResponse = data
         if (ytInitialPlayerResponse != null && config?.enabled && config.blockAds) {
-          processPlayerResponse(ytInitialPlayerResponse)
+          processPlayerResponse(ytInitialPlayerResponse, 'ytInitialPlayerResponse')
         }
       },
       get() {
@@ -4590,6 +5789,47 @@ function blockAds() {
     if (config?.enabled && config.blockAds) {
       warn('blockAds: error proxying fetch:', error)
     }
+  }
+
+  let urlProp = crypto.randomUUID()
+  let XMLHttpRequest_open = XMLHttpRequest.prototype.open
+  XMLHttpRequest.prototype.open = function(_, url, __, ___, ____) {
+    if (config?.enabled && config?.blockAds && (url?.includes('/player') || url?.includes('/get_watch'))) {
+      this[urlProp] = url
+    }
+    return XMLHttpRequest_open.apply(this, arguments)
+  }
+
+  let onloadProp = crypto.randomUUID()
+  let XMLHttpRequest_send = XMLHttpRequest.prototype.send
+  XMLHttpRequest.prototype.send = function(body) {
+    if (this[urlProp] && this.onload) {
+      this[onloadProp] = this.onload
+      this.onload = (...args) => {
+        if (typeof this.response == 'string') {
+          try {
+            let prefix = this.response.match(/^(\)\]\}'\n?)/)?.[1] ?? ''
+            let data = JSON.parse(this.response.slice(prefix.length))
+            processPlayerResponse(data, 'XHR')
+            let patched = prefix + JSON.stringify(data)
+            Object.defineProperty(this, 'response', {
+              configurable: true,
+              writable: false,
+              value: patched,
+            })
+            Object.defineProperty(this, 'responseText', {
+              configurable: true,
+              writable: false,
+              value: patched,
+            })
+          } catch (error) {
+            warn('blockAds: error patching', this[urlProp], 'XHR response:', error, this.response)
+          }
+        }
+        this[onloadProp]?.apply(this, args)
+      }
+    }
+    return XMLHttpRequest_send.call(this, body)
   }
 }
 
@@ -4644,7 +5884,7 @@ function main() {
       allowBackgroundPlay()
     }
     // CSS uses some of YouTube's own translations
-    // @ts-ignore
+    // @ts-expect-error
     waitFor(() => window.ytcfg?.msgs, 'ytcfg.msgs').then(() => {
       configureCss()
       if (desktop) {
@@ -4653,7 +5893,7 @@ function main() {
     })
     if (desktop && config.playerRemoveDelhiExperimentFlags) {
       function removeFlags() {
-        // @ts-ignore
+        // @ts-expect-error
         let watchConfig = window.yt?.config_?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH
         if (typeof watchConfig?.serializedExperimentFlags == 'string') {
           log('playerDisableDelhiExperiments: removing delhi_modern_web_player experiment flags')
@@ -4675,6 +5915,7 @@ function main() {
       }
     }
     if (desktop) {
+      configureGridCss()
       handleDesktopGuideBar()
     }
     observeTitle()
@@ -4690,13 +5931,18 @@ function main() {
 
 /** @param {Partial<import("./types").SiteConfig>} changes */
 function configChanged(changes) {
-  if (!changes.hasOwnProperty('enabled')) {
+  if (!Object.hasOwn(changes, 'enabled')) {
     log('config changed', changes)
     if (config.blockAds) {
       blockAds()
     }
     if (desktop && changes.enforceTheme && config.enforceTheme != 'default') {
       enforceTheme()
+    }
+    if (desktop && (
+      Object.hasOwn(changes, 'fixGhostCards') || Object.hasOwn(changes, 'minimumGridItemsPerRow')
+    )) {
+      configureGridCss()
     }
     configureCss()
     triggerVideoPageResize()
@@ -4712,6 +5958,7 @@ function configChanged(changes) {
     main()
   } else {
     configureCss()
+    configureGridCss()
     triggerVideoPageResize()
     disconnectObservers(pageObservers, 'page')
     disconnectObservers(globalObservers,' global')
@@ -4735,14 +5982,20 @@ function receiveConfigFromContentScript({data: {type, siteConfig}}) {
     return
   }
 
-  if ('debug' in siteConfig) {
+  if (Object.hasOwn(siteConfig, 'debug')) {
     log('disabling debug mode')
     debug = siteConfig.debug
     log('enabled debug mode')
     return
   }
 
-  if ('debugManualHiding' in siteConfig) {
+  if (Object.hasOwn(siteConfig, 'debugLogGridObservers')) {
+    debugLogGridObservers = siteConfig.debugLogGridObservers
+    log(`${debugLogGridObservers ? 'en' : 'dis'}abled logging of grid observers`)
+    return
+  }
+
+  if (Object.hasOwn(siteConfig, 'debugManualHiding')) {
     debugManualHiding = siteConfig.debugManualHiding
     log(`${debugManualHiding ? 'en' : 'dis'}abled debugging manual hiding`)
     configureCss()

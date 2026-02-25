@@ -26,9 +26,12 @@ export type Locale = {
 }
 
 export type LocaleKey =
+  | 'ADS_BLOCKED'
   | 'CLIP'
   | 'COLLABORATORS'
   | 'HIDE_CHANNEL'
+  | 'LOW_VIEWS_RE'
+  | 'MINIPLAYER'
   | 'MIXES'
   | 'ORIGINAL'
   | 'SHARE'
@@ -40,6 +43,7 @@ export type LocaleKey =
   | 'TELL_US_WHY'
   | 'THANKS'
   | 'UNHIDE_CHANNEL'
+  | 'UPLOAD_DATE'
 
 export type OptionsConfig = EmbedConfig & SiteConfig & {
   version?: Version
@@ -49,6 +53,7 @@ export type SiteConfig = {
   enabled: boolean
   collapsedOptions?: string[]
   debug?: boolean
+  debugLogGridObservers?: boolean
   debugManualHiding?: boolean
   defaultPlaybackSpeed: string
   alwaysShowShortsProgressBar: boolean
@@ -56,6 +61,7 @@ export type SiteConfig = {
   disableAmbientMode: boolean
   disableAutoplay: boolean
   disableHomeFeed: boolean
+  // XXX This doesn't seem to happen any more in the old player UI
   disableTheaterBigMode: boolean
   hiddenChannels: Channel[]
   hideAI: boolean
@@ -70,12 +76,14 @@ export type SiteConfig = {
   hideHomeCategories: boolean
   hideInfoPanels: boolean
   hideLive: boolean
+  hideLowViews: boolean
   hideMembersOnly: boolean
   hideMetadata: boolean
   hideMixes: boolean
   hideMoviesAndTV: boolean
   hideNextButton: boolean
   hidePlaylists: boolean
+  // TODO Default to true if we can detect the user doesn't have premium
   hidePremiumUpsells: boolean
   hideRelated: boolean
   hideShareThanksClip: boolean
@@ -101,16 +109,21 @@ export type SiteConfig = {
   addTakeSnapshot: boolean
   alwaysUseOriginalAudio: boolean
   alwaysUseTheaterMode: boolean
+  animateHiding: boolean
   disableThemedHover: boolean
   disableVideoPreviews: boolean
+  displayHomeGridAsList: boolean
+  displaySubscriptionsGridAsList: boolean
   downloadTranscript: boolean
   enforceTheme: 'default' | 'device' | 'dark' | 'light',
+  fixGhostCards: boolean
   fullSizeTheaterMode: boolean
   fullSizeTheaterModeHideHeader: boolean
   hideChat: boolean
   hideChatFullScreen: boolean
   hideEndCards: boolean
   hideEndVideos: boolean
+  hideExperiencingInterruptions: boolean
   hideJumpAheadButton: boolean
   hideMerchEtc: boolean
   hideRelatedBelow: boolean
@@ -118,21 +131,21 @@ export type SiteConfig = {
   hideShortsMetadataUntilHover: boolean
   hideShortsRemixButton: boolean
   hideSubscriptionsLatestBar: boolean
-  minimumGridItemsPerRow: 'auto' | '3' | '4' | '5' | '6'
-  minimumShortsPerRow: 'auto' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12'
+  minimumGridItemsPerRow: 'auto' | '+1' | '+2' | '+3' | '3' | '4' | '5' | '6'
+  minimumShortsPerRow: 'auto' | '4' | '5' | '6' | '7' | '8' | '9'
   pauseChannelTrailers: boolean
-  playerCompactPlayButton: boolean
   playerFixFullScreenButton: boolean
   playerHideFullScreenTitle: boolean
   playerHideFullScreenVoting: boolean
-  playerRemoveControlsBg: boolean
+  playerControlsBg: 'default' | 'blur' | 'transparent'
   playerRemoveDelhiExperimentFlags: boolean
   redirectLogoToSubscriptions: boolean
   restoreMiniplayerButton: boolean
   restoreSidebarSubscriptionsLink: boolean
   revertGiantRelated: boolean
   revertSidebarOrder: boolean
-  searchThumbnailSize: 'large' | 'medium' | 'small'
+  searchThumbnailSize: 'large' | 'medium' | 'small' | 'xsmall'
+  showChannelHeadersInListView: boolean
   snapshotFormat: 'jpeg' | 'png'
   snapshotQuality: string
   tidyGuideSidebar: boolean

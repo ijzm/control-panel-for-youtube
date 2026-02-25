@@ -17,14 +17,35 @@
   "alwaysUseTheaterMode": {
     "message": "常にシアターモードを使用する"
   },
+  "animateHiding": {
+    "message": "アニメーション付きで非表示"
+  },
   "annoyances": {
     "message": "煩わしい項目"
   },
   "anyPercent": {
     "message": "割合によらず"
   },
+  "atLeastX": {
+    "message": "最低 $AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
   "auto": {
     "message": "自動"
+  },
+  "autoPlusX": {
+    "message": "自動 +$AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
   },
   "blockAds": {
     "message": "広告をブロックする"
@@ -32,11 +53,32 @@
   "blockAdsNote": {
     "message": "他の広告ブロッカーとの競合を避けるため、無効にしてください"
   },
+  "blur": {
+    "message": "ぼかし"
+  },
   "dark": {
     "message": "ダーク"
   },
+  "debug": {
+    "message": "デバッグモード"
+  },
+  "debugLogGridObservers": {
+    "message": "グリッドオブザーバーのログ出力"
+  },
+  "debugManualHiding": {
+    "message": "手動非表示のデバッグ"
+  },
+  "debugManualHidingNote": {
+    "message": "非表示にせず、要素をハイライト表示する"
+  },
+  "debugNote": {
+    "message": "デバッグログを有効にする"
+  },
+  "debugOptions": {
+    "message": "デバッグオプション"
+  },
   "default": {
-    "message": "強制しない"
+    "message": "デフォルト"
   },
   "desktopOnly": {
     "message": "デスクトップのみ"
@@ -68,6 +110,12 @@
   "disableVideoPreviews": {
     "message": "動画のプレビューを無効にする"
   },
+  "displayHomeGridAsList": {
+    "message": "ホームのグリッドをリスト形式で表示"
+  },
+  "displaySubscriptionsGridAsList": {
+    "message": "登録チャンネルのグリッドをリスト形式で表示"
+  },
   "downloadTranscript": {
     "message": "文字起こしをダウンロード可能にする"
   },
@@ -95,11 +143,17 @@
   "features": {
     "message": "機能"
   },
+  "fixGhostCards": {
+    "message": "グリッドの読み込みプレースホルダーを修正"
+  },
   "fullSizeTheaterMode": {
     "message": "フルサイズシアターモード"
   },
   "fullSizeTheaterModeHideHeader": {
     "message": "ヘッダーを非表示にする"
+  },
+  "gridItemsPerRow": {
+    "message": "1行あたりのグリッド項目数"
   },
   "hiddenChannelsSummary": {
     "message": "隠しチャンネル ($COUNT$)",
@@ -117,7 +171,10 @@
     "message": "「質問する」ボタンを非表示にする"
   },
   "hideAutoDubbed": {
-    "message": "関連動画のオートダビング版を非表示にする"
+    "message": "オートダビング版を非表示にする"
+  },
+  "hideAutoDubbedNote": {
+    "message": "明示的にラベルが表示されている場合のみ"
   },
   "hideChannelBanner": {
     "message": "チャンネルバナー画像を非表示にする"
@@ -155,6 +212,9 @@
   "hideEndVideos": {
     "message": "動画の終了画面を非表示"
   },
+  "hideExperiencingInterruptions": {
+    "message": "「再生が中断されていますか？」ポップアップを非表示"
+  },
   "hideExploreButton": {
     "message": "ホームで検索ボタンを非表示"
   },
@@ -178,6 +238,9 @@
   },
   "hideLive": {
     "message": "ライブ動画を非表示"
+  },
+  "hideLowViews": {
+    "message": "関連動画の再生数が少ない動画を非表示"
   },
   "hideMembersOnly": {
     "message": "メンバー限定動画を非表示にする"
@@ -278,9 +341,6 @@
   "medium": {
     "message": "中"
   },
-  "minimumGridItemsPerRow": {
-    "message": "1行あたりの最小表示数"
-  },
   "minimumShortsPerRow": {
     "message": "1行あたりの最小ショート数"
   },
@@ -296,8 +356,8 @@
   "pauseChannelTrailers": {
     "message": "チャンネルのトレーラーを自動的に一時停止"
   },
-  "playerCompactPlayButton": {
-    "message": "常にコンパクトな再生ボタンを使用する"
+  "playerControlsBg": {
+    "message": "プレーヤーコントロールの背景"
   },
   "playerFixFullScreenButton": {
     "message": "隅のクリックで全画面を切り替える機能を復元"
@@ -313,9 +373,6 @@
   },
   "playerHideFullScreenVoting": {
     "message": "全画面の高評価/低評価ボタンを非表示にする"
-  },
-  "playerRemoveControlsBg": {
-    "message": "コントロールから背景を削除する"
   },
   "playerRemoveDelhiExperimentFlags": {
     "message": "新しいプログレスバーとコントロールを無効にする"
@@ -335,6 +392,9 @@
   "qualityMedium": {
     "message": "中"
   },
+  "recentChanges": {
+    "message": "最近のYouTubeの変更"
+  },
   "redirectLogoToSubscriptions": {
     "message": "ロゴのリンク先を登録チャンネルにする"
   },
@@ -351,7 +411,7 @@
     "message": "サイドバーの「登録チャンネル」リンクを復元する"
   },
   "revertGiantRelated": {
-    "message": "関連動画のサムネイルを小さく復元する"
+    "message": "関連動画のサイドバーレイアウトを復元する"
   },
   "revertSidebarOrder": {
     "message": "サイドバーの項目の並び順を復元する"
@@ -361,6 +421,9 @@
   },
   "shorts": {
     "message": "ショート"
+  },
+  "showChannelHeadersInListView": {
+    "message": "リスト表示でチャンネルヘッダーを表示"
   },
   "showFullVideoTitles": {
     "message": "動画のタイトルを全文表示する"
@@ -380,6 +443,9 @@
   "tidyGuideSidebar": {
     "message": "サイドバーを整理する"
   },
+  "transparent": {
+    "message": "透明"
+  },
   "uiTweaks": {
     "message": "UIの微調整"
   },
@@ -392,7 +458,7 @@
   "videoPages": {
     "message": "動画ページ"
   },
-  "youtubeExperiments": {
-    "message": "YouTubeの実験"
+  "xsmall": {
+    "message": "極小"
   }
 }

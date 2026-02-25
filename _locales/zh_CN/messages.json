@@ -17,14 +17,35 @@
   "alwaysUseTheaterMode": {
     "message": "始终剧院模式"
   },
+  "animateHiding": {
+    "message": "隐藏时显示动画"
+  },
   "annoyances": {
     "message": "干扰项"
   },
   "anyPercent": {
     "message": "任何 %"
   },
+  "atLeastX": {
+    "message": "至少 $AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
   "auto": {
     "message": "自动"
+  },
+  "autoPlusX": {
+    "message": "自动 +$AMOUNT$",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
   },
   "blockAds": {
     "message": "拦截广告"
@@ -32,11 +53,32 @@
   "blockAdsNote": {
     "message": "为避免与其他广告拦截工具冲突，请停用此项"
   },
+  "blur": {
+    "message": "模糊"
+  },
   "dark": {
     "message": "深色"
   },
+  "debug": {
+    "message": "调试模式"
+  },
+  "debugLogGridObservers": {
+    "message": "记录网格观察器日志"
+  },
+  "debugManualHiding": {
+    "message": "调试手动隐藏"
+  },
+  "debugManualHidingNote": {
+    "message": "高亮显示元素而非隐藏"
+  },
+  "debugNote": {
+    "message": "启用调试日志"
+  },
+  "debugOptions": {
+    "message": "调试选项"
+  },
   "default": {
-    "message": "不强制"
+    "message": "默认"
   },
   "desktopOnly": {
     "message": "仅限桌面"
@@ -68,6 +110,12 @@
   "disableVideoPreviews": {
     "message": "停用视频预览"
   },
+  "displayHomeGridAsList": {
+    "message": "将主页网格显示为列表"
+  },
+  "displaySubscriptionsGridAsList": {
+    "message": "将订阅网格显示为列表"
+  },
   "downloadTranscript": {
     "message": "使转录稿可下载"
   },
@@ -88,19 +136,25 @@
     "description": "<= 112 characters"
   },
   "extensionName": {
-    "message": "YouTube 控制面板"
+    "message": "适用于 YouTube 的控制面板"
   },
   "extensionNameDisabled": {
-    "message": "YouTube 控制面板 (已停用)"
+    "message": "适用于 YouTube 的控制面板 (已停用)"
   },
   "features": {
     "message": "特点"
+  },
+  "fixGhostCards": {
+    "message": "修复网格加载占位符"
   },
   "fullSizeTheaterMode": {
     "message": "全屏影院模式"
   },
   "fullSizeTheaterModeHideHeader": {
     "message": "隐藏标题栏"
+  },
+  "gridItemsPerRow": {
+    "message": "每行网格项目数"
   },
   "hiddenChannelsSummary": {
     "message": "隐藏频道 ($COUNT$)",
@@ -118,7 +172,10 @@
     "message": "隐藏“提问”按钮"
   },
   "hideAutoDubbed": {
-    "message": "隐藏相关视频中的自动配音视频"
+    "message": "隐藏自动配音视频"
+  },
+  "hideAutoDubbedNote": {
+    "message": "仅在有明确标记时"
   },
   "hideChannelBanner": {
     "message": "隐藏频道横幅图片"
@@ -156,6 +213,9 @@
   "hideEndVideos": {
     "message": "隐藏视频片尾画面内容"
   },
+  "hideExperiencingInterruptions": {
+    "message": "隐藏“有中断问题？”弹窗"
+  },
   "hideExploreButton": {
     "message": "在主页中隐藏“探索”按钮"
   },
@@ -179,6 +239,9 @@
   },
   "hideLive": {
     "message": "隐藏视频直播"
+  },
+  "hideLowViews": {
+    "message": "隐藏相关视频中的低播放量视频"
   },
   "hideMembersOnly": {
     "message": "隐藏会员专属视频"
@@ -279,9 +342,6 @@
   "medium": {
     "message": "中号"
   },
-  "minimumGridItemsPerRow": {
-    "message": "每行最小缩略图个数"
-  },
   "minimumShortsPerRow": {
     "message": "每行最少 Shorts 数量"
   },
@@ -297,8 +357,8 @@
   "pauseChannelTrailers": {
     "message": "自动暂停频道预告片"
   },
-  "playerCompactPlayButton": {
-    "message": "始终使用紧凑的播放按钮"
+  "playerControlsBg": {
+    "message": "播放器控件背景"
   },
   "playerFixFullScreenButton": {
     "message": "恢复点击角落切换全屏的功能"
@@ -314,9 +374,6 @@
   },
   "playerHideFullScreenVoting": {
     "message": "隐藏全屏下的“顶”/“踩”按钮"
-  },
-  "playerRemoveControlsBg": {
-    "message": "移除控件的背景"
   },
   "playerRemoveDelhiExperimentFlags": {
     "message": "停用新的进度条和控件"
@@ -336,6 +393,9 @@
   "qualityMedium": {
     "message": "中"
   },
+  "recentChanges": {
+    "message": "YouTube 近期更改"
+  },
   "redirectLogoToSubscriptions": {
     "message": "点击Logo跳转至订阅"
   },
@@ -352,13 +412,16 @@
     "message": "恢复侧边栏中的“订阅”链接"
   },
   "revertGiantRelated": {
-    "message": "恢复相关视频中的小缩略图"
+    "message": "恢复相关视频侧边栏布局"
   },
   "revertSidebarOrder": {
     "message": "恢复侧边栏项目的顺序"
   },
   "searchThumbnailSize": {
     "message": "搜索缩略图大小"
+  },
+  "showChannelHeadersInListView": {
+    "message": "在列表视图中显示频道标题"
   },
   "showFullVideoTitles": {
     "message": "显示完整视频标题"
@@ -378,6 +441,9 @@
   "tidyGuideSidebar": {
     "message": "整理侧边栏订阅"
   },
+  "transparent": {
+    "message": "透明"
+  },
   "uiTweaks": {
     "message": "界面调整"
   },
@@ -390,7 +456,7 @@
   "videoPages": {
     "message": "视频页面"
   },
-  "youtubeExperiments": {
-    "message": "YouTube 实验"
+  "xsmall": {
+    "message": "极小"
   }
 }
